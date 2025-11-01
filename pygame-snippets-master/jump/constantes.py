@@ -1,12 +1,14 @@
-from pathlib import Path
+from os import path
 
 # Estabelece a pasta que contem as figuras e sons.
-IMG_DIR = Path(__file__).parent.parent / 'img'
+IMG_DIR = path.join(path.dirname(__file__), 'img')
+IMAGENS_DIR = path.join(path.dirname(__file__), 'imagens')
+MUSICAS_DIR = path.join(path.dirname(__file__), 'musicas')
 
 # Dados gerais do jogo.
-TITULO = 'Exemplo de Pulo'
-LARGURA = 480 # Largura da tela
-ALTURA = 600 # Altura da tela
+TITULO = 'INSPER FIGHT'
+LARGURA = 1100# Largura da tela
+ALTURA = 650 # Altura da tela
 FPS = 60 # Frames por segundo
 
 # Define algumas variáveis com as cores básicas
@@ -28,3 +30,8 @@ CHAO = ALTURA * 5 // 6
 PARADO = 0
 PULANDO = 1
 CAINDO = 2
+
+# Estados possíveis do jogo
+INIT = 0
+GAME = 1
+QUIT = 2
