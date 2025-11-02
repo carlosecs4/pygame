@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
-
 # Importando as bibliotecas necessárias.
 import pygame
 import random
 from os import path
+from constantes import *
 
 # Estabelece a pasta que contem as figuras e sons.
 img_dir = path.join(path.dirname(__file__), 'img')
@@ -203,7 +202,7 @@ class Player(pygame.sprite.Sprite):
                 self.rect.right = collision.rect.left
             # Estava indo para a esquerda
             elif self.speedx < 0:
-                self.rect.left = collision.rect.right
+                self.rect.left = collision.rect.righ
 
     # Método que faz o personagem pular
     def jump(self):
@@ -241,8 +240,7 @@ def game_screen(screen):
     blocks = pygame.sprite.Group()
 
     # Cria Sprite do jogador
-    player1 = Player(assets[PLAYER_IMG], 12, 2, platforms, blocks)
-    player2 = Player(assets[PLAYER_IMG], 12, 8, platforms, blocks)
+    player = Player(assets[PLAYER_IMG], 12, 2, platforms, blocks)
 
     # Cria tiles de acordo com o mapa
     for row in range(len(MAP)):
@@ -257,14 +255,10 @@ def game_screen(screen):
                     platforms.add(tile)
 
     # Adiciona o jogador no grupo de sprites por último para ser desenhado por cima das plataformas
-    all_sprites.add(player1)
-    all_sprites.add(player2)
+    all_sprites.add(player)
 
-    PLAYING = 0
-    DONE = 1
-
-    state = PLAYING
-    while state != DONE:
+    state = GAME
+    while state != QUIT:
 
         # Ajusta a velocidade do jogo.
         clock.tick(FPS)
@@ -274,25 +268,25 @@ def game_screen(screen):
 
             # Verifica se foi fechado.
             if event.type == pygame.QUIT:
-                state = DONE
+                state = QUIT
 
             # Verifica se apertou alguma tecla.
             if event.type == pygame.KEYDOWN:
                 # Dependendo da tecla, altera o estado do jogador.
                 if event.key == pygame.K_LEFT:
-                    player1.speedx -= SPEED_X
+                    player.speedx -= SPEED_X
                 elif event.key == pygame.K_RIGHT:
-                    player1.speedx += SPEED_X
+                    player.speedx += SPEED_X
                 elif event.key == pygame.K_UP or event.key == pygame.K_SPACE:
-                    player1.jump()
+                    player.jump()
 
             # Verifica se soltou alguma tecla.
             if event.type == pygame.KEYUP:
                 # Dependendo da tecla, altera o estado do jogador.
                 if event.key == pygame.K_LEFT:
-                    player1.speedx += SPEED_X
+                    player.speedx += SPEED_X
                 elif event.key == pygame.K_RIGHT:
-                    player1.speedx -= SPEED_X
+                    player.speedx -= SPEED_X
 
         # Depois de processar os eventos.
         # Atualiza a acao de cada sprite. O grupo chama o método update() de cada Sprite dentre dele.
@@ -304,26 +298,3 @@ def game_screen(screen):
 
         # Depois de desenhar tudo, inverte o display.
         pygame.display.flip()
-
-
-# Inicialização do Pygame.
-pygame.init()
-pygame.mixer.init()
-
-# Tamanho da tela.
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-
-# Nome do jogo
-pygame.display.set_caption(TITULO)
-
-# Imprime instruções
-print('*' * len(TITULO))
-print(TITULO.upper())
-print('*' * len(TITULO))
-print('Utilize as setas do teclado para andar e pular.')
-
-# Comando para evitar travamentos.
-try:
-    game_screen(screen)
-finally:
-    pygame.quit()
