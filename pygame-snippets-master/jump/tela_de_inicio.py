@@ -1,6 +1,6 @@
 import pygame
 import random
-from constantes import *
+from declarações_importantes import *
 
 def tela_inicio(tela):
     # Variável para ajustar a velocidade
