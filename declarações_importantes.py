@@ -20,8 +20,6 @@ VERDE = (0, 255, 0)
 AZUL = (0, 0, 255)
 AMARELO = (255, 255, 0)
 
-# Define a aceleração da gravidade
-GRAVIDADE = 1000  # px / s^2
 # Define a velocidade inicial no pulo
 VELOCIDADE_PULO = 500  # px / s
 # Define a altura do chão
@@ -58,7 +56,7 @@ BLUE = (0, 0, 255)
 YELLOW = (255, 255, 0)
 
 # Define a aceleração da gravidade
-GRAVITY = 5
+GRAVITY = 7.5
 # Define a velocidade inicial no pulo
 JUMP_SIZE = TILE_SIZE
 # Define a velocidade em x

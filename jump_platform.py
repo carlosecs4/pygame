@@ -16,6 +16,7 @@ class Player(pygame.sprite.Sprite):
         self.jump = False
         self.attacking = False 
         self.attack_type = 0
+        self.health = 100
 
     def move(self, surface, target):
         SPEED = 10
@@ -37,7 +38,7 @@ class Player(pygame.sprite.Sprite):
 
                 #pular
                 if key[pygame.K_w] and not self.jump:
-                    self.vel_y = -30
+                    self.vel_y = -100
                     self.jump = True 
 
                 #attack
@@ -72,7 +73,7 @@ class Player(pygame.sprite.Sprite):
         hits = attacking_rect.colliderect(target)
         self.attacking = True
         if hits:
-            print("Hit")
+            target.health -= 10
         pygame.draw.rect(surface, (0, 255, 0), attacking_rect)
 
     def draw(self, surface):
@@ -87,12 +88,20 @@ def desenha_fundo():
 tela = pygame.display.set_mode((LARGURA, ALTURA))
 pygame.display.set_caption(TITULO)
 
+
+
+# função para criar a barra de vida
+def draw_barra_de_vida(health,x,y):
+    ratio = health / 100
+    pygame.draw.rect(tela,AMARELO, (x,y,400, 30))
+    pygame.draw.rect(tela,VERMELHO, (x, y ,400 * ratio ,30))
+
+
 def game_screen(screen):
     # Variável para o ajuste de velocidade
     clock = pygame.time.Clock()
 
     desenha_fundo()
-
     # Cria o sprite de 2 jogadores:
     player1 = Player(200, 310)
     player2 = Player(700, 310)
@@ -105,6 +114,10 @@ def game_screen(screen):
         clock.tick(FPS)
 
         desenha_fundo()
+
+         # mostra a barra de vida
+        draw_barra_de_vida(player1.health, 20, 20)
+        draw_barra_de_vida(player2.health,680,20)
 
         # Variável para poder atualizar todos os sprites de uma vez
 

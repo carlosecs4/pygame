@@ -33,6 +33,7 @@ def tela_inicio(tela):
 
             if event.type == pygame.KEYUP:
                 estado = GAME
+                pygame.mixer.music.stop()
                 rodando = False
 
         # A cada loop, redesenha o fundo e os sprites
