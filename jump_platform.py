@@ -37,7 +37,7 @@ class Player(pygame.sprite.Sprite):
 
                 #pular
                 if key[pygame.K_w] and not self.jump:
-                    self.vel_y = -30
+                    self.vel_y = -100
                     self.jump = True 
 
                 #attack
