@@ -106,6 +106,8 @@ def game_screen(screen):
 
         desenha_fundo()
 
+        # Variável para poder atualizar todos os sprites de uma vez
+
         player1.move(tela, player2)
 
         player1.draw(tela)
@@ -117,5 +119,17 @@ def game_screen(screen):
             # Verifica se foi fechado.
             if event.type == pygame.QUIT:
                 state = QUIT
+            
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_w or event.key == pygame.K_a or event.key == pygame.K_d:
+                    player1.move(tela, player2)
+                if event.key == pygame.K_r or event.key == pygame.K_t:
+                    player1.attack(tela, player2)
+            
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_r or event.key == pygame.K_t:
+                    player1.attacking = False
+        
+        player1.update()
 
         pygame.display.update()

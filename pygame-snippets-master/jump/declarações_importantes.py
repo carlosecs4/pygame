@@ -39,7 +39,6 @@ QUIT = 2
 
 #connstantes que estavam em jump_plataform:
 # Dados gerais do jogo.
-TITULO = 'Exemplo de Pulo com obstáculos'
 WIDTH = 1280 # Largura da tela
 HEIGHT = 720 # Altura da tela
 TILE_SIZE = 40 # Tamanho de cada tile (cada tile é um quadrado)
