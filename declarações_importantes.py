@@ -25,11 +25,6 @@ VELOCIDADE_PULO = 500  # px / s
 # Define a altura do chão
 CHAO = ALTURA * 5 // 6
 
-# Define estados possíveis do jogador
-PARADO = 0
-PULANDO = 1
-CAINDO = 2
-
 # Estados possíveis do jogo
 INIT = 0
 GAME = 1
@@ -56,7 +51,11 @@ BLUE = (0, 0, 255)
 YELLOW = (255, 255, 0)
 
 # Define a aceleração da gravidade
+<<<<<<< HEAD
 GRAVITY = 7.5
+=======
+GRAVITY = 8
+>>>>>>> ec17c5bafbc1f50641bb4f0189317b04357f2f06
 # Define a velocidade inicial no pulo
 JUMP_SIZE = TILE_SIZE
 # Define a velocidade em x
