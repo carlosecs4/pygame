@@ -17,6 +17,7 @@ class Player(pygame.sprite.Sprite):
         self.attacking = False 
         self.attack_type = 0
         self.health = 100
+        self.virar = False
 
     def move(self, surface, target):
         SPEED = 10
@@ -49,7 +50,12 @@ class Player(pygame.sprite.Sprite):
                         self.attack_type = 1
                     if key[pygame.K_t]:
                         self.attack_type = 2
-
+        
+        #Garantir que os jogadores estão virados um pro outro
+        if target.rect.centerx > self.rect.centerx:
+            self.virar = False
+        else:
+            self.virar = True
 
         #aplicando a gravidade:
         self.vel_y += GRAVITY
@@ -69,7 +75,11 @@ class Player(pygame.sprite.Sprite):
         self.rect.y += dy
 
     def attack(self, surface, target):
-        attacking_rect = pygame.Rect(self.rect.centerx, self.rect.y, 2 * self.rect.width, self.rect.height)
+        # Se o jogador estiver virado para o oponente ele ataca pra direita, se não para a esquerda
+        if self.virar == False:
+            attacking_rect = pygame.Rect(self.rect.centerx, self.rect.y, 2 * self.rect.width, self.rect.height)
+        else:
+            attacking_rect = pygame.Rect(self.rect.centerx - 2 * self.rect.width, self.rect.y, 2 * self.rect.width, self.rect.height)
         hits = attacking_rect.colliderect(target)
         self.attacking = True
         if hits:
@@ -78,8 +88,10 @@ class Player(pygame.sprite.Sprite):
 
     def draw(self, surface):
         pygame.draw.rect(surface, (255, 0, 0), self.rect)
-
-fundo_jogo = pygame.image.load("imagens/cenário 2.png")
+    
+    def desenha_personagen(self, sprite):
+        personagen_escalado = pygame.transform.scale(sprite, (self.rect.width, self.rect.height))
+        tela.blit(personagen_escalado, (self.rect.x, self.rect.y))
 
 def desenha_fundo():
     fundo_escalado = pygame.transform.scale(fundo_jogo, (WIDTH, HEIGHT))
@@ -88,14 +100,11 @@ def desenha_fundo():
 tela = pygame.display.set_mode((LARGURA, ALTURA))
 pygame.display.set_caption(TITULO)
 
-
-
 # função para criar a barra de vida
-def draw_barra_de_vida(health,x,y):
+def desenha_barra_de_vida(health,x,y):
     ratio = health / 100
     pygame.draw.rect(tela,AMARELO, (x,y,400, 30))
     pygame.draw.rect(tela,VERMELHO, (x, y ,400 * ratio ,30))
-
 
 def game_screen(screen):
     # Variável para o ajuste de velocidade
@@ -116,15 +125,17 @@ def game_screen(screen):
         desenha_fundo()
 
          # mostra a barra de vida
-        draw_barra_de_vida(player1.health, 20, 20)
-        draw_barra_de_vida(player2.health,680,20)
+        desenha_barra_de_vida(player1.health, 20, 20)
+        desenha_barra_de_vida(player2.health,680,20)
 
         # Variável para poder atualizar todos os sprites de uma vez
 
         player1.move(tela, player2)
 
         player1.draw(tela)
+        player1.desenha_personagen(bob)
         player2.draw(tela)
+        player2.desenha_personagen(gabriel)
 
         # Processa os eventos (mouse, teclado, botão, etc).
         for event in pygame.event.get():
