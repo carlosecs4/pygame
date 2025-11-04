@@ -88,8 +88,10 @@ class Player(pygame.sprite.Sprite):
 
     def draw(self, surface):
         pygame.draw.rect(surface, (255, 0, 0), self.rect)
-
-fundo_jogo = pygame.image.load("imagens/cenário 2.png")
+    
+    def desenha_personagen(self, sprite):
+        personagen_escalado = pygame.transform.scale(sprite, (self.rect.width, self.rect.height))
+        tela.blit(personagen_escalado, (self.rect.x, self.rect.y))
 
 def desenha_fundo():
     fundo_escalado = pygame.transform.scale(fundo_jogo, (WIDTH, HEIGHT))
@@ -98,14 +100,11 @@ def desenha_fundo():
 tela = pygame.display.set_mode((LARGURA, ALTURA))
 pygame.display.set_caption(TITULO)
 
-
-
 # função para criar a barra de vida
 def desenha_barra_de_vida(health,x,y):
     ratio = health / 100
     pygame.draw.rect(tela,AMARELO, (x,y,400, 30))
     pygame.draw.rect(tela,VERMELHO, (x, y ,400 * ratio ,30))
-
 
 def game_screen(screen):
     # Variável para o ajuste de velocidade
@@ -134,7 +133,9 @@ def game_screen(screen):
         player1.move(tela, player2)
 
         player1.draw(tela)
+        player1.desenha_personagen(bob)
         player2.draw(tela)
+        player2.desenha_personagen(gabriel)
 
         # Processa os eventos (mouse, teclado, botão, etc).
         for event in pygame.event.get():

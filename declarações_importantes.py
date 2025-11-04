@@ -6,6 +6,15 @@ IMG_DIR = path.join(path.dirname(__file__), 'img')
 IMAGENS_DIR = path.join(path.dirname(__file__), 'imagens')
 MUSICAS_DIR = path.join(path.dirname(__file__), 'musicas')
 
+# Imagens usadas
+fundo_jogo = pygame.image.load("imagens/cenário 2.png")
+bob = pygame.image.load("imagens/Bob.png")
+gabriel = pygame.image.load("imagens/Gabriel.png")
+
+# Tamnho dos personagens
+player_width = 60
+player_height = 160
+
 # Dados gerais do jogo.
 TITULO = 'INSPER FIGHT'
 LARGURA = 1100# Largura da tela
@@ -38,9 +47,6 @@ TILE_SIZE = 40 # Tamanho de cada tile (cada tile é um quadrado)
 PLAYER_WIDTH = TILE_SIZE
 PLAYER_HEIGHT = int(TILE_SIZE * 1.5)
 FPS = 60 # Frames por segundo
-
-# Imagens
-PLAYER_IMG = 'player_img'
 
 # Define algumas variáveis com as cores básicas
 WHITE = (255, 255, 255)
