@@ -138,7 +138,7 @@ class Player2(pygame.sprite.Sprite):
                         self.attack_type = 2
         
         #Garantir que os jogadores estão virados um pro outro
-        if target.rect.centerx < self.rect.centerx:
+        if target.rect.centerx > self.rect.centerx:
             self.virar = False
         else:
             self.virar = True
@@ -217,7 +217,7 @@ def game_screen(screen):
         # Variável para poder atualizar todos os sprites de uma vez
 
         player1.move(tela, player2)
-        player2.move(tela, player2)
+        player2.move(tela, player1)
 
         player1.draw(tela)
         player1.desenha_personagen(bob)
