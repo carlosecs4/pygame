@@ -128,8 +128,10 @@ class Player(pygame.sprite.Sprite):
                 self.frame = 0
                 self.ultimo_update = pygame.time.get_ticks()
         else:
-            self.movimento_atual = 'PARADO'
-            self.frame = 0
+            # Se o jogador não está se movendo, a animação muda para parado
+            if self.movimento_atual != 'PARADO':
+                self.movimento_atual = 'PARADO'
+                self.frame = 0
         
         # Controle de frames da animação
         agora = pygame.time.get_ticks()
@@ -283,7 +285,7 @@ def game_screen(screen):
                 state = QUIT
             
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_w or event.key == pygame.K_a or event.key == pygame.K_d:
+                if event.key == pygame.K_w or event.key == pygame.K_SPACE or event.key == pygame.K_a or event.key == pygame.K_d:
                     player1.move(tela, player2)
                 if event.key == pygame.K_r or event.key == pygame.K_t:
                     player1.attack(tela, player2)
@@ -295,9 +297,6 @@ def game_screen(screen):
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_r or event.key == pygame.K_t:
                     player1.attacking = False
-                    player1.frame = 0
-                if event.key == pygame.K_w or event.key == pygame.K_a or event.key == pygame.K_d:
-                    player1.frame = 0
                 if event.key == pygame.K_RSHIFT or event.key == pygame.K_KP0:
                     player2.attacking = False
 
