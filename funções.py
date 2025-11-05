@@ -1,5 +1,6 @@
 import pygame
 from declarações_importantes import *
+from tela_do_jogo import *
 
 def inicializa():
 
@@ -19,7 +20,7 @@ def inicializa():
     jogador_img = pygame.image.load(path.join(IMG_DIR, 'hero-single.png')).convert_alpha()
 
     # Cria Sprite do jogador
-    jogador = Jogador(jogador_img)
+    jogador = Player(jogador_img)
     # Cria um grupo de todos os sprites e adiciona o jogador.
     todos_sprites = pygame.sprite.Group()
     todos_sprites.add(jogador)

@@ -1,6 +1,6 @@
 import pygame
 from declarações_importantes import *
-from jump_platform import *
+from tela_do_jogo import *
 from tela_de_inicio import *
 
 pygame.init()
