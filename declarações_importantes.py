@@ -11,6 +11,35 @@ fundo_jogo = pygame.image.load("imagens/cenário 2.png")
 bob = pygame.image.load("imagens/Bob.png")
 gabriel = pygame.image.load("imagens/Gabriel.png")
 
+# Criando dicionario com as imagens dos personagens
+poloni_parado = []
+for i in range(1, 6):
+    temp_img = pygame.image.load(f"imagens/Poloni sprites/Parado/Poloni parado {i}.png")
+    poloni_parado.append(temp_img)
+
+poloni_andando = []
+for i in range(1, 11):
+    temp_img = pygame.image.load(f"imagens/Poloni sprites/Andando/Poloni andando {i}.png")
+    poloni_andando.append(temp_img)
+
+poloni_socando = []
+for i in range(1, 4):
+    temp_img = pygame.image.load(f"imagens/Poloni sprites/Soco/Poloni soco {i}.png")
+    poloni_socando.append(temp_img)
+
+poloni_agachando = []
+for i in range(1, 3):
+    temp_img = pygame.image.load(f"imagens/Poloni sprites/Agachando/Poloni agachando {i}.png")
+    poloni_agachando.append(temp_img)
+
+imagens_poloni = {
+    'PARADO': poloni_parado,
+    'ANDANDO': poloni_andando,
+    'SOCANDO': poloni_socando,
+    'AGACHANDO': poloni_agachando
+}
+
+
 # Tamnho dos personagens
 player_width = 60
 player_height = 160
@@ -63,13 +92,13 @@ JUMP_SIZE = TILE_SIZE
 # Define a velocidade em x
 SPEED_X = 5
 
-
 # Define os tipos de tiles
 BLOCK = 0
 PLATF = 1
 EMPTY = -1
 
 # Define estados possíveis do jogador
-STILL = 0
-JUMPING = 1
-FALLING = 2
+PARADO = 0
+ANDANDO = 1
+SOCANDO = 2
+AGACHANDO = 3 

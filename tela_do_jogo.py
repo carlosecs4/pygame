@@ -10,20 +10,39 @@ img_dir = path.join(path.dirname(__file__), 'img')
 # Classe Jogador que representa o herói
 class Player(pygame.sprite.Sprite):
     
-    def __init__(self, x, y):
+    def __init__(self, x, y, assets):
+        pygame.sprite.Sprite.__init__(self)
+        
         self.rect = pygame.Rect((x, y, 80, 180))
         self.vel_y = 0
         self.jump = False
         self.attacking = False 
+        self.correndo = False
         self.attack_type = 0
         self.health = 100
         self.virar = False
+        
+        # Variáveis de animação
+        self.animacoes = assets
+        self.movimento_atual = 'PARADO'
+        self.frame = 0
+        self.imagem = assets[self.movimento_atual][self.frame]
+        self.imagem = pygame.transform.scale(self.imagem, (self.rect.width, self.rect.height))
+        self.rect = self.imagem.get_rect()
+        self.rect.center = (x, y)
+        self.ultimo_update = pygame.time.get_ticks()
+
+        self.frame_ticks = 120  # Tempo entre frames
 
     def move(self, surface, target):
         SPEED = 10
         dx = 0
         dy = 0
         self.vel_y = 0
+        
+        # Essas duas precisam ser falsas para atualizar a animação se o jogador soltar as teclas de movimento ou ataque
+        self.correndo = False
+        self.attacking = False 
 
         #teclas precionadas
         key = pygame.key.get_pressed()
@@ -33,9 +52,10 @@ class Player(pygame.sprite.Sprite):
                 #movimentos
                 if key[pygame.K_a]:
                     dx = -SPEED
-                
+                    self.correndo = True
                 if key[pygame.K_d]:
                     dx = SPEED
+                    self.correndo = True
 
                 #pular
                 if key[pygame.K_w] and not self.jump:
@@ -45,6 +65,7 @@ class Player(pygame.sprite.Sprite):
                 #attack
                 if key[pygame.K_r] or key[pygame.K_t]:
                     self.attack(surface, target)
+                    self.attacking = True
                     #determinando qual tipo de ataque será usado
                     if key[pygame.K_r]:
                         self.attack_type = 1
@@ -86,12 +107,41 @@ class Player(pygame.sprite.Sprite):
             target.health -= 10
         pygame.draw.rect(surface, (0, 255, 0), attacking_rect)
 
+    # Método para desenhar o jogador
     def draw(self, surface):
+        imagem_ajustada = pygame.transform.flip(self.imagem, self.virar, False)
         pygame.draw.rect(surface, (255, 0, 0), self.rect)
+        surface.blit(imagem_ajustada, (self.rect.x, self.rect.y))
     
-    def desenha_personagen(self, sprite):
-        personagen_escalado = pygame.transform.scale(sprite, (self.rect.width, self.rect.height))
-        tela.blit(personagen_escalado, (self.rect.x, self.rect.y))
+    # Método para atualizar a animação do jogador
+    def update(self):
+        # Checa o estado atual para definir a animação correta
+        if self.attacking:
+            # Se o movimento novo não for o mesmo que o anterior, reinicia a animação
+            if self.movimento_atual != 'SOCANDO':
+                self.movimento_atual = 'SOCANDO'
+                self.frame = 0
+                self.ultimo_update = pygame.time.get_ticks()
+        elif self.correndo:
+            if self.movimento_atual != 'ANDANDO':
+                self.movimento_atual = 'ANDANDO'
+                self.frame = 0
+                self.ultimo_update = pygame.time.get_ticks()
+        else:
+            self.movimento_atual = 'PARADO'
+            self.frame = 0
+        
+        # Controle de frames da animação
+        agora = pygame.time.get_ticks()
+        tempo = agora - self.ultimo_update
+
+        self.imagem = self.animacoes[self.movimento_atual][self.frame]
+        if tempo > self.frame_ticks:
+            self.ultimo_update = agora
+            self.frame += 1
+            if self.frame >= len(self.animacoes[self.movimento_atual]):
+                self.frame = 0
+            
 
 # criando sprite do player 2:
 class Player2(pygame.sprite.Sprite):
@@ -198,7 +248,7 @@ def game_screen(screen):
 
     desenha_fundo()
     # Cria o sprite de 2 jogadores:
-    player1 = Player(200, 310)
+    player1 = Player(200, 410, imagens_poloni)
     player2 = Player2(700, 310)
 
     state = GAME
@@ -220,9 +270,10 @@ def game_screen(screen):
         player2.move(tela, player1)
 
         player1.draw(tela)
-        player1.desenha_personagen(bob)
         player2.draw(tela)
-        player2.desenha_personagen(gabriel)
+
+        # Atualiza a animação dos jogadores
+        player1.update()
 
         # Processa os eventos (mouse, teclado, botão, etc).
         for event in pygame.event.get():
@@ -244,7 +295,9 @@ def game_screen(screen):
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_r or event.key == pygame.K_t:
                     player1.attacking = False
-            if event.type == pygame.KEYUP:
+                    player1.frame = 0
+                if event.key == pygame.K_w or event.key == pygame.K_a or event.key == pygame.K_d:
+                    player1.frame = 0
                 if event.key == pygame.K_RSHIFT or event.key == pygame.K_KP0:
                     player2.attacking = False
 
