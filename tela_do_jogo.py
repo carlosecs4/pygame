@@ -42,7 +42,7 @@ class Player(pygame.sprite.Sprite):
         dx = 0
         dy = 0
         self.vel_y = 0
-        
+
         # Essas duas precisam ser falsas para atualizar a animação se o jogador soltar as teclas de movimento ou ataque
         self.correndo = False
         self.attacking = False 
@@ -67,7 +67,8 @@ class Player(pygame.sprite.Sprite):
                 
                 # Agachar
                 if key[pygame.K_s] and not self.agachar:
-                    self.rect = pygame.Rect((self.x / 2, self.y /2, 80, 90))
+                    self.vel_y = 100
+                    self.rect = pygame.Rect((self.rect.x, self.rect.y, 80, 90))
                     self.agachar = True 
 
                 #attack
@@ -141,7 +142,7 @@ class Player(pygame.sprite.Sprite):
                 self.movimento_atual = 'PARADO'
                 self.frame = 0
         if not self.agachar:
-            self.rect = pygame.Rect((self.x, self.y, 80, 180))
+            self.rect = pygame.Rect((self.rect.x, self.rect.y, 80, 180))
 
         # Controle de frames da animação
         agora = pygame.time.get_ticks()
