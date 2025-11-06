@@ -12,8 +12,10 @@ class Player(pygame.sprite.Sprite):
     
     def __init__(self, x, y, assets):
         pygame.sprite.Sprite.__init__(self)
-        
-        self.rect = pygame.Rect((x, y, 80, 180))
+
+        self.x = x
+        self.y = y
+        self.rect = pygame.Rect((self.x, self.y, 80, 180))
         self.vel_y = 0
         self.jump = False
         self.attacking = False 
@@ -21,6 +23,7 @@ class Player(pygame.sprite.Sprite):
         self.attack_type = 0
         self.health = 100
         self.virar = False
+        self.agachar = False
         
         # Variáveis de animação
         self.animacoes = assets
@@ -61,6 +64,11 @@ class Player(pygame.sprite.Sprite):
                 if key[pygame.K_w] and not self.jump:
                     self.vel_y = -100
                     self.jump = True 
+                
+                # Agachar
+                if key[pygame.K_s] and not self.agachar:
+                    self.rect = pygame.Rect((self.x / 2, self.y /2, 80, 90))
+                    self.agachar = True 
 
                 #attack
                 if key[pygame.K_r] or key[pygame.K_t]:
@@ -132,7 +140,9 @@ class Player(pygame.sprite.Sprite):
             if self.movimento_atual != 'PARADO':
                 self.movimento_atual = 'PARADO'
                 self.frame = 0
-        
+        if not self.agachar:
+            self.rect = pygame.Rect((self.x, self.y, 80, 180))
+
         # Controle de frames da animação
         agora = pygame.time.get_ticks()
         tempo = agora - self.ultimo_update
@@ -336,7 +346,7 @@ def game_screen(screen):
                 state = QUIT
             
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_w or event.key == pygame.K_SPACE or event.key == pygame.K_a or event.key == pygame.K_d:
+                if event.key == pygame.K_w or event.key == pygame.K_SPACE or event.key == pygame.K_a or event.key == pygame.K_d or event.key == pygame.K_s:
                     player1.move(tela, player2)
                 if event.key == pygame.K_r or event.key == pygame.K_t:
                     player1.attack(tela, player2)
@@ -348,6 +358,8 @@ def game_screen(screen):
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_r or event.key == pygame.K_t:
                     player1.attacking = False
+                if event.key == pygame.K_s:
+                    player1.agachar = False
                 if event.key == pygame.K_RSHIFT or event.key == pygame.K_KP0:
                     player2.attacking = False
 
