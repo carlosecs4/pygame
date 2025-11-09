@@ -7,12 +7,20 @@ from declarações_importantes import *
 # Função para a tela de seleção de personagem
 def tela_selecao(tela):
     clock = pygame.time.Clock()
+    # Variável para armazenar o personagem selecionado
     selecionado = 0
+
+    # Lista de personagens disponíveis
     personagens = ['poloni', 'bob', 'dani', 'julien']
     font = pygame.font.SysFont(None, 30)
 
     # Lista com as imagens dos personagens, feita com ajuda do copilot
     imagens_personagens = [pygame.image.load(path.join(IMAGENS_DIR, f'{p} sprites\Foto para seleção\{p} perfil.jpg')) for p in personagens]
+
+     # Carrega e toca música de fundo (COLOCA ISSO NO ASSETS DEPOIS)
+    pygame.mixer.music.load(path.join(MUSICAS_DIR, 'Tela de seleção.ogg'))
+    pygame.mixer.music.set_volume(0.3)
+    pygame.mixer.music.play(loops=-1)
 
     # Loop de seleção para o player 1
     selecionando = True
@@ -85,5 +93,5 @@ def tela_selecao(tela):
         tela.blit(instrucoes, (LARGURA // 2 - instrucoes.get_width() // 2, ALTURA - 100))
         
         pygame.display.flip()
-    
+    pygame.mixer.music.stop()
     return [estado, personagem1, personagem2]
