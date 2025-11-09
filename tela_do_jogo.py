@@ -3,6 +3,7 @@ import pygame
 import random
 from os import path
 from declarações_importantes import *
+from tela_de_selecao import *
 
 # Classe do Player 1
 class Player1(pygame.sprite.Sprite):
@@ -344,14 +345,17 @@ def desenha_barra_de_vida(health,x,y):
     pygame.draw.rect(tela,AMARELO, (x,y,400, 30))
     pygame.draw.rect(tela,VERMELHO, (x, y ,400 * ratio ,30))
 
-def game_screen(screen):
+def game_screen(screen, p1, p2): # game_screen recebe os personagens selecionados
     # Variável para o ajuste de velocidade
     clock = pygame.time.Clock()
 
     desenha_fundo()
     # Cria o sprite de 2 jogadores:
-    player1 = Player1(200, 400, imagens_julien)
-    player2 = Player2(700, 310, imagens_dani)
+    player1_personagem = p1
+    player2_personagem = p2
+
+    player1 = Player1(200, 400, imagens_personagens[player1_personagem])
+    player2 = Player2(700, 310, imagens_personagens[player2_personagem])
 
     state = GAME
 

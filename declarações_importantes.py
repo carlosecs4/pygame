@@ -250,6 +250,13 @@ imagens_julien = {
     'PULANDO': julien_pulando
     }
 
+#  Criando um dicionario que mapeia o nome do personagem ao seu dicionário de imagens
+imagens_personagens = {
+    'poloni': imagens_poloni,
+    'bob': imagens_bob,
+    'dani': imagens_dani,
+    'julien': imagens_julien
+}
 
 # Tamnho dos personagens
 player_width = 60
@@ -276,8 +283,9 @@ CHAO = ALTURA * 5 // 6
 
 # Estados possíveis do jogo
 INIT = 0
-GAME = 1
-QUIT = 2
+SELECT = 1
+GAME = 2
+QUIT = 3
 
 #connstantes que estavam em jump_plataform:
 # Dados gerais do jogo.

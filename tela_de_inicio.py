@@ -32,7 +32,7 @@ def tela_inicio(tela):
                 rodando = False
 
             if event.type == pygame.KEYUP:
-                estado = GAME
+                estado = SELECT
                 pygame.mixer.music.stop()
                 rodando = False
 
