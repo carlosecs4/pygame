@@ -143,7 +143,7 @@ for i in range(1, 11):
 
 dani_socando = []
 for i in range(1, 9):
-    temp_img = pygame.image.load(path.join(Dani_dir, f'Socando\{i}.png'))
+    temp_img = pygame.image.load(path.join(Dani_dir, f'Atacando\{i}.png'))
     temp_img = pygame.transform.scale(temp_img, (60, 160))
     temp_img = pygame.transform.flip(temp_img, True, False)
     dani_socando.append(temp_img)
