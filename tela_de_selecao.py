@@ -23,9 +23,15 @@ def tela_selecao(tela):
                 return QUIT
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
-                    selecionado = (selecionado - 1) % len(imagens_personagens)
+                    if selecionado - 1 < 0:
+                        selecionado = len(imagens_personagens) - 1
+                    else:
+                        selecionado = (selecionado - 1)
                 elif event.key == pygame.K_RIGHT:
-                    selecionado = (selecionado + 1) % len(imagens_personagens)
+                    if selecionado + 1 >= len(imagens_personagens):
+                        selecionado = 0
+                    else:
+                        selecionado = (selecionado + 1)
                 elif event.key == pygame.K_RETURN:
                     selecionando = False
                     estado = GAME  # Prosseguir para o jogo após seleção
@@ -57,9 +63,16 @@ def tela_selecao(tela):
                 elif event.key == pygame.K_RIGHT:
                     selecionado = (selecionado + 1) % len(imagens_personagens)
                 elif event.key == pygame.K_RETURN:
+                    personagem2 = personagens[selecionado]
+                    if personagem2 == personagem1:
+                        # Evitar que o player 2 escolha o mesmo personagem do player 1
+                        aviso = font.render("Personagem já selecionado! Escolha outro.", True, VERMELHO)
+                        tela.blit(aviso, (LARGURA // 2 - aviso.get_width() // 2, ALTURA - 150))
+                        pygame.display.flip()
+                        pygame.time.delay(1500) # Espera o player ler o aviso
+                        continue
                     selecionando = False
                     estado = GAME  # Prosseguir para o jogo após seleção
-                    personagem2 = personagens[selecionado]
         
         tela.fill(PRETO)
         texto = font.render("Player 2 selecione seu personagem", True, BRANCO)
