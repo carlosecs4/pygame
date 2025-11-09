@@ -4,11 +4,8 @@ import random
 from os import path
 from declarações_importantes import *
 
-# Estabelece a pasta que contem as figuras e sons.
-img_dir = path.join(path.dirname(__file__), 'img')
-
 # Classe do Player 1
-class Player(pygame.sprite.Sprite):
+class Player1(pygame.sprite.Sprite):
     
     def __init__(self, x, y, assets):
         pygame.sprite.Sprite.__init__(self)
@@ -35,7 +32,11 @@ class Player(pygame.sprite.Sprite):
         self.rect.center = (x, y)
         self.ultimo_update = pygame.time.get_ticks()
 
-        self.frame_ticks = 120  # Tempo entre frames
+        self.frame_ticks_animacao = 150  # Tempo entre frames
+        
+        # Só será possível atacar a cada 200 milissegundos
+        self.ultimo_ataque = pygame.time.get_ticks()  # Cooldown para o ataque
+        self.frame_ticks_ataque = 200  # Tempo entre ataques
 
     def move(self, surface, target):
         SPEED = 10
@@ -45,35 +46,35 @@ class Player(pygame.sprite.Sprite):
 
         # Essas duas precisam ser falsas para atualizar a animação se o jogador soltar as teclas de movimento ou ataque
         self.correndo = False
-        self.attacking = False 
+        self.attacking = False
 
         #teclas precionadas
         key = pygame.key.get_pressed()
 
         if self.attacking == False:
-            if self.attacking == False:
-                #movimentos
-                if key[pygame.K_a]:
-                    dx = -SPEED
-                    self.correndo = True
-                if key[pygame.K_d]:
-                    dx = SPEED
-                    self.correndo = True
+            #movimentos
+            if key[pygame.K_a]:
+                dx = -SPEED
+                self.correndo = True
+            if key[pygame.K_d]:
+                dx = SPEED
+                self.correndo = True
 
-                #pular
-                if key[pygame.K_w] and not self.jump:
-                    self.vel_y = -100
-                    self.jump = True 
+            #pular
+            if key[pygame.K_w] and not self.jump:
+                self.vel_y = -100
+                self.jump = True 
                 
-                # Agachar
-                if key[pygame.K_s] and not self.agachar:
-                    self.vel_y = 100
-                    self.rect = pygame.Rect((self.rect.x, self.rect.y, 80, 90))
-                    self.agachar = True 
+            # Agachar
+            if key[pygame.K_s] and not self.agachar:
+                self.vel_y = 100
+                self.rect = pygame.Rect((self.rect.x, self.rect.y, 80, 90))
+                self.agachar = True 
 
-                #attack
-                if key[pygame.K_r] or key[pygame.K_t]:
-                    self.attack(surface, target)
+            #ataque
+            if key[pygame.K_r] or key[pygame.K_t]:
+                ataque_executado = self.attack(surface, target) # Checar se o ataque foi executado
+                if ataque_executado:
                     self.attacking = True
                     #determinando qual tipo de ataque será usado
                     if key[pygame.K_r]:
@@ -105,16 +106,22 @@ class Player(pygame.sprite.Sprite):
         self.rect.y += dy
 
     def attack(self, surface, target):
-        # Se o jogador estiver virado para o oponente ele ataca pra direita, se não para a esquerda
-        if self.virar == False:
-            attacking_rect = pygame.Rect(self.rect.centerx, self.rect.y, 2 * self.rect.width, self.rect.height)
-        else:
-            attacking_rect = pygame.Rect(self.rect.centerx - 2 * self.rect.width, self.rect.y, 2 * self.rect.width, self.rect.height)
-        hits = attacking_rect.colliderect(target)
-        self.attacking = True
-        if hits:
-            target.health -= 10
-        pygame.draw.rect(surface, (0, 255, 0), attacking_rect)
+        # Variáveis para checar o tempo entre ataques
+        agora_ataque = pygame.time.get_ticks()
+        elapsed_ticks_ataque = agora_ataque - self.ultimo_ataque
+    
+        if elapsed_ticks_ataque >= self.frame_ticks_ataque:
+            self.ultimo_ataque = agora_ataque
+            # Se o jogador estiver virado para o oponente ele ataca pra direita, se não para a esquerda
+            if self.virar == False:
+                attacking_rect = pygame.Rect(self.rect.centerx, self.rect.y, 2 * self.rect.width, self.rect.height)
+            else:
+                attacking_rect = pygame.Rect(self.rect.centerx - 2 * self.rect.width, self.rect.y, 2 * self.rect.width, self.rect.height)
+            hits = attacking_rect.colliderect(target)
+            self.attacking = True
+            if hits:
+                target.health -= 10
+            pygame.draw.rect(surface, (0, 255, 0), attacking_rect)
 
     # Método para desenhar o jogador
     def draw(self, surface):
@@ -134,6 +141,11 @@ class Player(pygame.sprite.Sprite):
         elif self.correndo:
             if self.movimento_atual != 'ANDANDO':
                 self.movimento_atual = 'ANDANDO'
+                self.frame = 0
+                self.ultimo_update = pygame.time.get_ticks()
+        elif self.agachar:
+            if self.movimento_atual != 'AGACHANDO':
+                self.movimento_atual = 'AGACHANDO'
                 self.frame = 0
                 self.ultimo_update = pygame.time.get_ticks()
         else:
@@ -149,7 +161,7 @@ class Player(pygame.sprite.Sprite):
         tempo = agora - self.ultimo_update
 
         self.imagem = self.animacoes[self.movimento_atual][self.frame]
-        if tempo > self.frame_ticks:
+        if tempo > self.frame_ticks_animacao:
             self.ultimo_update = agora
             self.frame += 1
             if self.frame >= len(self.animacoes[self.movimento_atual]):
@@ -160,8 +172,10 @@ class Player2(pygame.sprite.Sprite):
     
     def __init__(self, x, y, assets):
         pygame.sprite.Sprite.__init__(self)
-        
-        self.rect = pygame.Rect((x, y, 80, 180))
+
+        self.x = x
+        self.y = y
+        self.rect = pygame.Rect((self.x, self.y, 80, 180))
         self.vel_y = 0
         self.jump = False
         self.attacking = False 
@@ -169,6 +183,7 @@ class Player2(pygame.sprite.Sprite):
         self.attack_type = 0
         self.health = 100
         self.virar = False
+        self.agachar = False
         
         # Variáveis de animação
         self.animacoes = assets
@@ -180,14 +195,18 @@ class Player2(pygame.sprite.Sprite):
         self.rect.center = (x, y)
         self.ultimo_update = pygame.time.get_ticks()
 
-        self.frame_ticks = 120  # Tempo entre frames
+        self.frame_ticks_animacao = 150  # Tempo entre frames
+        
+        # Só será possível atacar a cada 200 milissegundos
+        self.ultimo_ataque = pygame.time.get_ticks()  # Cooldown para o ataque
+        self.frame_ticks_ataque = 200  # Tempo entre ataques
 
     def move(self, surface, target):
         SPEED = 10
         dx = 0
         dy = 0
         self.vel_y = 0
-        
+
         # Essas duas precisam ser falsas para atualizar a animação se o jogador soltar as teclas de movimento ou ataque
         self.correndo = False
         self.attacking = False 
@@ -196,28 +215,34 @@ class Player2(pygame.sprite.Sprite):
         key = pygame.key.get_pressed()
 
         if self.attacking == False:
-            if self.attacking == False:
-                #movimentos
-                if key[pygame.K_LEFT]:
-                    dx = -SPEED
-                    self.correndo = True
-                if key[pygame.K_RIGHT]:
-                    dx = SPEED
-                    self.correndo = True
+            #movimentos
+            if key[pygame.K_LEFT]:
+                dx = -SPEED
+                self.correndo = True
+            if key[pygame.K_RIGHT]:
+                dx = SPEED
+                self.correndo = True
 
-                #pular
-                if key[pygame.K_UP] and not self.jump:
-                    self.vel_y = -100
-                    self.jump = True 
+            #pular
+            if key[pygame.K_UP] and not self.jump:
+                self.vel_y = -100
+                self.jump = True 
+                
+            # Agachar
+            if key[pygame.K_DOWN] and not self.agachar:
+                self.vel_y = 100
+                self.rect = pygame.Rect((self.rect.x, self.rect.y, 80, 90))
+                self.agachar = True 
 
-                #attack
-                if key[pygame.K_RSHIFT] or key[pygame.K_KP0]:
-                    self.attack(surface, target)
+            #ataque
+            if key[pygame.K_RSHIFT] or key[pygame.K_KP0]:
+                ataque_executado = self.attack(surface, target) # Checar se o ataque foi executado
+                if ataque_executado:
                     self.attacking = True
                     #determinando qual tipo de ataque será usado
-                    if key[pygame.K_r]:
+                    if key[pygame.K_RSHIFT]:
                         self.attack_type = 1
-                    if key[pygame.K_t]:
+                    if key[pygame.K_KP0]:
                         self.attack_type = 2
         
         #Garantir que os jogadores estão virados um pro outro
@@ -244,16 +269,22 @@ class Player2(pygame.sprite.Sprite):
         self.rect.y += dy
 
     def attack(self, surface, target):
-        # Se o jogador estiver virado para o oponente ele ataca pra direita, se não para a esquerda
-        if self.virar == False:
-            attacking_rect = pygame.Rect(self.rect.centerx, self.rect.y, 2 * self.rect.width, self.rect.height)
-        else:
-            attacking_rect = pygame.Rect(self.rect.centerx - 2 * self.rect.width, self.rect.y, 2 * self.rect.width, self.rect.height)
-        hits = attacking_rect.colliderect(target)
-        self.attacking = True
-        if hits:
-            target.health -= 10
-        pygame.draw.rect(surface, (0, 255, 0), attacking_rect)
+        # Variáveis para checar o tempo entre ataques
+        agora_ataque = pygame.time.get_ticks()
+        elapsed_ticks_ataque = agora_ataque - self.ultimo_ataque
+    
+        if elapsed_ticks_ataque >= self.frame_ticks_ataque:
+            self.ultimo_ataque = agora_ataque
+            # Se o jogador estiver virado para o oponente ele ataca pra direita, se não para a esquerda
+            if self.virar == False:
+                attacking_rect = pygame.Rect(self.rect.centerx, self.rect.y, 2 * self.rect.width, self.rect.height)
+            else:
+                attacking_rect = pygame.Rect(self.rect.centerx - 2 * self.rect.width, self.rect.y, 2 * self.rect.width, self.rect.height)
+            hits = attacking_rect.colliderect(target)
+            self.attacking = True
+            if hits:
+                target.health -= 10
+            pygame.draw.rect(surface, (0, 255, 0), attacking_rect)
 
     # Método para desenhar o jogador
     def draw(self, surface):
@@ -275,23 +306,31 @@ class Player2(pygame.sprite.Sprite):
                 self.movimento_atual = 'ANDANDO'
                 self.frame = 0
                 self.ultimo_update = pygame.time.get_ticks()
+        elif self.agachar:
+            if self.movimento_atual != 'AGACHANDO':
+                self.movimento_atual = 'AGACHANDO'
+                self.frame = 0
+                self.ultimo_update = pygame.time.get_ticks()
         else:
             # Se o jogador não está se movendo, a animação muda para parado
             if self.movimento_atual != 'PARADO':
                 self.movimento_atual = 'PARADO'
                 self.frame = 0
-        
+        if not self.agachar:
+            self.rect = pygame.Rect((self.rect.x, self.rect.y, 80, 180))
+
         # Controle de frames da animação
         agora = pygame.time.get_ticks()
         tempo = agora - self.ultimo_update
 
         self.imagem = self.animacoes[self.movimento_atual][self.frame]
-        if tempo > self.frame_ticks:
+        if tempo > self.frame_ticks_animacao:
             self.ultimo_update = agora
             self.frame += 1
             if self.frame >= len(self.animacoes[self.movimento_atual]):
                 self.frame = 0
-        
+
+# Função para carregar o fundo do jogo
 def desenha_fundo():
     fundo_escalado = pygame.transform.scale(fundo_jogo, (WIDTH, HEIGHT))
     tela.blit(fundo_escalado, (0,0))
@@ -311,8 +350,8 @@ def game_screen(screen):
 
     desenha_fundo()
     # Cria o sprite de 2 jogadores:
-    player1 = Player(200, 400, imagens_poloni)
-    player2 = Player2(700, 310, imagens_poloni)
+    player1 = Player1(200, 400, imagens_julien)
+    player2 = Player2(700, 310, imagens_dani)
 
     state = GAME
 
@@ -363,5 +402,7 @@ def game_screen(screen):
                     player1.agachar = False
                 if event.key == pygame.K_RSHIFT or event.key == pygame.K_KP0:
                     player2.attacking = False
+                if event.key == pygame.K_DOWN:
+                    player2.agachar = False
 
         pygame.display.update()
