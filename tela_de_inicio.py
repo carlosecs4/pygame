@@ -10,7 +10,7 @@ def tela_inicio(tela):
     fundo = pygame.image.load(path.join(IMAGENS_DIR, 'Logo do jogo.png')).convert()
     fundo = pygame.transform.scale(fundo, (LARGURA, ALTURA))
     fundo_rect = fundo.get_rect()
-    font = pygame.font.SysFont(None, 30)
+    font = pygame.font.Font('fontes/mk5style.ttf', 30)
     
     # Cria texto para falar pro jogador apertar qualquer tecla para jogar
     texto = font.render('Aperte qualquer tecla para jogar', True, (255, 50, 50))

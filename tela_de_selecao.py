@@ -12,7 +12,7 @@ def tela_selecao(tela):
 
     # Lista de personagens disponíveis
     personagens = ['poloni', 'bob', 'dani', 'julien', 'marcio']
-    font = pygame.font.SysFont(None, 30)
+    font = pygame.font.Font("fontes/mk5style.ttf", 30)
 
     # Lista com as imagens dos personagens, feita com ajuda do copilot
     imagens_personagens = [pygame.image.load(path.join(IMAGENS_DIR, f'{p} sprites\Foto para seleção\{p} perfil.jpg')) for p in personagens]
@@ -46,11 +46,12 @@ def tela_selecao(tela):
                     personagem1 = personagens[selecionado]
         
         tela.fill(PRETO)
-        texto = font.render("Player 1 selecione seu personagem", True, VERMELHO)
-        tela.blit(texto, (LARGURA // 2 - texto.get_width() // 2, 50))
         
         personagem_atual = imagens_personagens[selecionado]
         tela.blit(personagem_atual, (LARGURA // 2 - personagem_atual.get_width() // 2, ALTURA // 2 - personagem_atual.get_height() // 2))
+
+        texto = font.render("Player 1 selecione seu personagem", True, VERMELHO)
+        tela.blit(texto, (LARGURA // 2 - texto.get_width() // 2, 50))
         
         instrucoes = font.render("Use as setas para selecionar e Enter para confirmar", True, VERMELHO)
         tela.blit(instrucoes, (LARGURA // 2 - instrucoes.get_width() // 2, ALTURA - 100))
@@ -83,11 +84,12 @@ def tela_selecao(tela):
                     estado = GAME  # Prosseguir para o jogo após seleção
         
         tela.fill(PRETO)
-        texto = font.render("Player 2 selecione seu personagem", True, VERMELHO)
-        tela.blit(texto, (LARGURA // 2 - texto.get_width() // 2, 50))
         
         personagem_atual = imagens_personagens[selecionado]
         tela.blit(personagem_atual, (LARGURA // 2 - personagem_atual.get_width() // 2, ALTURA // 2 - personagem_atual.get_height() // 2))
+        
+        texto = font.render("Player 2 selecione seu personagem", True, VERMELHO)
+        tela.blit(texto, (LARGURA // 2 - texto.get_width() // 2, 50))
         
         instrucoes = font.render("Use as setas para selecionar e Enter para confirmar", True, VERMELHO)
         tela.blit(instrucoes, (LARGURA // 2 - instrucoes.get_width() // 2, ALTURA - 100))

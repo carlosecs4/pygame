@@ -7,7 +7,7 @@ IMAGENS_DIR = path.join(path.dirname(__file__), 'imagens')
 MUSICAS_DIR = path.join(path.dirname(__file__), 'musicas')
 
 # Imagens usadas
-fundo_jogo = pygame.image.load("imagens/Cenário 1.jpg")
+fundo_jogo = pygame.image.load(path.join(IMAGENS_DIR, "Cenário 1.jpg"))
 
 # POLONI
 
@@ -155,8 +155,8 @@ player_height = 160
 
 # Dados gerais do jogo.
 TITULO = 'INSPER FIGHT'
-LARGURA = 1100# Largura da tela
-ALTURA = 650 # Altura da tela
+LARGURA = 1000# Largura da tela
+ALTURA = 550 # Altura da tela
 FPS = 60 # Frames por segundo
 
 # Define algumas variáveis com as cores básicas
