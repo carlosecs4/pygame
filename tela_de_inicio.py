@@ -15,8 +15,8 @@ def tela_inicio(tela):
     # Cria texto para falar pro jogador apertar qualquer tecla para jogar
     texto = font.render('Aperte qualquer tecla para jogar', True, (255, 50, 50))
     
-    # Carrega e toca música de fundo (COLOCA ISSO NO ASSETS DEPOIS)
-    pygame.mixer.music.load(path.join(MUSICAS_DIR, 'Insper-Fight-OST.ogg'))
+    # Carrega e toca música de fundo
+    pygame.mixer.music.load(path.join(MUSICAS_DIR, 'Tela de início.ogg'))
     pygame.mixer.music.set_volume(0.3)
     pygame.mixer.music.play(loops=-1)
 
@@ -32,7 +32,7 @@ def tela_inicio(tela):
                 rodando = False
 
             if event.type == pygame.KEYUP:
-                estado = GAME
+                estado = SELECT
                 pygame.mixer.music.stop()
                 rodando = False
 
