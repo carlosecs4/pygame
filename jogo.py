@@ -24,7 +24,7 @@ while estado != QUIT:
         personagem1 = selecoes[1]  # tela_selecao retorna o personagem 1 no segundo indice
         personagem2 = selecoes[2]  # tela_selecao retorna o personagem 2 no terceiro indice
     elif estado == GAME:
-        #game screen retorna uma lista com o estado e também o jogador vencedor.
+        #game screen retorna uma lista com o estado e também o jogador vencedor
         seleções = game_screen(tela, personagem1, personagem2)   # agora game_screen retorna o próximo estado
         estado = seleções[0]
         ganhador = seleções[1]

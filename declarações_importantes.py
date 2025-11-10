@@ -21,6 +21,16 @@ def define_animação(endereço, posição, n):
         lista.append(temp_img)
     return lista
 
+# Alguns arquivos estão invertidos, essa função é igual a anterior, mas também inverte a imagem
+def define_animação_virada(endereço, posição, n):
+    lista = []
+    for i in range(1, n):
+        temp_img = pygame.image.load(path.join(endereço, f'{posição}\{i}.png'))
+        temp_img = pygame.transform.scale(temp_img, (temp_img.get_width() * 160 / temp_img.get_height(), 160))
+        temp_img = pygame.transform.flip(temp_img, True, False)
+        lista.append(temp_img)
+    return lista
+
 # Animações do Poloni
 poloni_parado = define_animação(Poloni_dir, 'Parado', 6)
 poloni_andando = define_animação(Poloni_dir, 'Andando', 11)
@@ -47,11 +57,11 @@ imagens_poloni = {
 Bob_dir = path.join(path.dirname(__file__), 'imagens', 'Bob sprites')
 
 # Animações do Bob
-bob_parado = define_animação(Bob_dir, 'Parado', 4)
-bob_andando = define_animação(Bob_dir, 'Andando', 11)
-bob_socando = define_animação(Bob_dir, 'Atacando', 6)
-bob_agachando = define_animação(Bob_dir, 'Agachando', 2)
-bob_atacado = define_animação(Bob_dir, 'Sendo atacado', 7)
+bob_parado = define_animação_virada(Bob_dir, 'Parado', 4)
+bob_andando = define_animação_virada(Bob_dir, 'Andando', 11)
+bob_socando = define_animação_virada(Bob_dir, 'Atacando', 6)
+bob_agachando = define_animação_virada(Bob_dir, 'Agachando', 2)
+bob_atacado = define_animação_virada(Bob_dir, 'Sendo atacado', 7)
 
 imagens_bob = {
     'PARADO': bob_parado,
@@ -65,14 +75,14 @@ imagens_bob = {
 Dani_dir = path.join(path.dirname(__file__), 'imagens', 'Dani sprites')
 
 # Animações da Dani
-dani_parado = define_animação(Dani_dir, 'Parado', 11)
-dani_andando = define_animação(Dani_dir, 'Andando', 11)
-dani_socando = define_animação(Dani_dir, 'Atacando', 9)
-dani_agachando = define_animação(Dani_dir, 'Agachando', 3)
-dani_atacado = define_animação(Dani_dir, 'Sendo atacado', 5)
-dani_vencendo = define_animação(Dani_dir, 'Vencendo', 14)
-dani_pulando = define_animação(Dani_dir, 'Pulando', 5)
-dani_morto = define_animação(Dani_dir, 'Morto', 8)
+dani_parado = define_animação_virada(Dani_dir, 'Parado', 11)
+dani_andando = define_animação_virada(Dani_dir, 'Andando', 11)
+dani_socando = define_animação_virada(Dani_dir, 'Atacando', 9)
+dani_agachando = define_animação_virada(Dani_dir, 'Agachando', 3)
+dani_atacado = define_animação_virada(Dani_dir, 'Sendo atacado', 5)
+dani_vencendo = define_animação_virada(Dani_dir, 'Vencendo', 14)
+dani_pulando = define_animação_virada(Dani_dir, 'Pulando', 5)
+dani_morto = define_animação_virada(Dani_dir, 'Morto', 8)
 
 imagens_dani = {
     'PARADO': dani_parado,
@@ -89,12 +99,12 @@ imagens_dani = {
 Julien_dir = path.join(path.dirname(__file__), 'imagens', 'Julien sprites')
 
 # Animações do Julien
-julien_parado = define_animação(Julien_dir, 'Parado', 6)
-julien_andando = define_animação(Julien_dir, 'Andando', 12)
-julien_socando = define_animação(Julien_dir, 'Atacando', 14)
-julien_agachando = define_animação(Julien_dir, 'Agachando', 3)
-julien_atacado = define_animação(Julien_dir, 'Sendo atacado', 4)
-julien_pulando = define_animação(Julien_dir, 'Pulando', 4)
+julien_parado = define_animação_virada(Julien_dir, 'Parado', 6)
+julien_andando = define_animação_virada(Julien_dir, 'Andando', 12)
+julien_socando = define_animação_virada(Julien_dir, 'Atacando', 14)
+julien_agachando = define_animação_virada(Julien_dir, 'Agachando', 3)
+julien_atacado = define_animação_virada(Julien_dir, 'Sendo atacado', 4)
+julien_pulando = define_animação_virada(Julien_dir, 'Pulando', 4)
 
 imagens_julien = {
     'PARADO': julien_parado,
@@ -110,14 +120,14 @@ imagens_julien = {
 Marcio_dir = path.join(path.dirname(__file__), 'imagens', 'Marcio sprites')
 
 # Animações do Márcio
-marcio_parado = define_animação(Marcio_dir, 'Parado', 7)
-marcio_andando = define_animação(Marcio_dir, 'Andando', 9)
-marcio_socando = define_animação(Marcio_dir, 'Atacando', 14)
-marcio_agachando = define_animação(Marcio_dir, 'Agachando', 3)
-marcio_atacado = define_animação(Marcio_dir, 'Sendo atacado', 5)
-marcio_pulando = define_animação(Marcio_dir, 'Pulando', 6)
-marcio_morto = define_animação(Marcio_dir, 'Morto', 6)
-marcio_vencendo = define_animação(Marcio_dir, 'Vencendo', 12)
+marcio_parado = define_animação_virada(Marcio_dir, 'Parado', 7)
+marcio_andando = define_animação_virada(Marcio_dir, 'Andando', 9)
+marcio_socando = define_animação_virada(Marcio_dir, 'Atacando', 14)
+marcio_agachando = define_animação_virada(Marcio_dir, 'Agachando', 3)
+marcio_atacado = define_animação_virada(Marcio_dir, 'Sendo atacado', 5)
+marcio_pulando = define_animação_virada(Marcio_dir, 'Pulando', 6)
+marcio_morto = define_animação_virada(Marcio_dir, 'Morto', 6)
+marcio_vencendo = define_animação_virada(Marcio_dir, 'Vencendo', 12)
 
 imagens_marcio = {
     'PARADO': marcio_parado,
