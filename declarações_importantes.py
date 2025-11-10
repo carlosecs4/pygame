@@ -13,11 +13,11 @@ fundo_jogo = pygame.image.load("imagens/Cenário 1.jpg")
 
 Poloni_dir = path.join(path.dirname(__file__), 'imagens', 'Poloni sprites') # Guardando endereço das imagens
 
-def define_animação(nome, endereço, posição, n, m):
+def define_animação(endereço, posição, n):
     lista = []
     for i in range(1, n):
         temp_img = pygame.image.load(path.join(endereço, f'{posição}/{i}.png'))
-        temp_img = pygame.transform.scale(temp_img, (temp_img.get_width() / m, temp_img.get_height() / m))
+        tempo_img = pygame.transform.scale(temp_img, (temp_img.get_width() * 60 / temp_img.get_height(), 160))
         lista.append(temp_img)
     return lista
 
