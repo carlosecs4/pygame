@@ -11,6 +11,7 @@ class Player1(pygame.sprite.Sprite):
     def __init__(self, x, y, assets):
         pygame.sprite.Sprite.__init__(self)
 
+        #variaveis que indicam o movimento
         self.x = x
         self.y = y
         self.rect = pygame.Rect((self.x, self.y, 80, 180))
@@ -22,6 +23,7 @@ class Player1(pygame.sprite.Sprite):
         self.health = 100
         self.virar = False
         self.agachar = False
+        self.defender = True
         
         # Variáveis de animação
         self.animacoes = assets
@@ -185,6 +187,7 @@ class Player2(pygame.sprite.Sprite):
         self.health = 100
         self.virar = False
         self.agachar = False
+        self.defender = False
         
         # Variáveis de animação
         self.animacoes = assets
@@ -359,7 +362,7 @@ def game_screen(screen, p1, p2): # game_screen recebe os personagens selecionado
 
     state = GAME
 
-    while state != QUIT:
+    while state == GAME:
 
         # Ajusta a velocidade do jogo.
         clock.tick(FPS)
@@ -409,4 +412,15 @@ def game_screen(screen, p1, p2): # game_screen recebe os personagens selecionado
                 if event.key == pygame.K_DOWN:
                     player2.agachar = False
 
+            #verifica se a vida dos personagens acabou
+            if player1.health <=0 or player2.health <= 0:
+                if player1.health <=0:
+                    ganhador = 2
+                if player2.health <=0:
+                    ganhador = 1
+                state = GAME_OVER
+                break
+
         pygame.display.update()
+    
+    return [state, ganhador]

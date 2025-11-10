@@ -9,17 +9,26 @@ MUSICAS_DIR = path.join(path.dirname(__file__), 'musicas')
 # Imagens usadas
 fundo_jogo = pygame.image.load("imagens/Cenário 1.jpg")
 
-# Criando dicionario com as imagens dos personagens
-
 # POLONI
 
 Poloni_dir = path.join(path.dirname(__file__), 'imagens', 'Poloni sprites') # Guardando endereço das imagens
 
+def define_animação(nome, endereço, posição, n, m):
+    lista = []
+    for i in range(1, n):
+        temp_img = pygame.image.load(path.join(endereço, f'{posição}/{i}.png'))
+        temp_img = pygame.transform.scale(temp_img, (temp_img.get_width() / m, temp_img.get_height() / m))
+        lista.append(temp_img)
+    return lista
+
+# animações_poloni = {}
 poloni_parado = []
 for i in range(1, 6):
     temp_img = pygame.image.load(path.join(Poloni_dir, f'Parado/Poloni parado {i}.png'))
     temp_img = pygame.transform.scale(temp_img, (60, 160))
     poloni_parado.append(temp_img)
+
+# animações_poloni['parado'] = define_animação("poloni", Poloni_dir, 'Parado', 6, 3)
 
 poloni_andando = []
 for i in range(1, 11):
@@ -90,7 +99,7 @@ for i in range(1, 4):
 bob_andando = []
 for i in range(1, 11):
     temp_img = pygame.image.load(path.join(Bob_dir, f'Andando/Bob andando {i}.png'))
-    temp_img = pygame.transform.scale(temp_img, (60, 160))
+    temp_img = pygame.transform.scale(temp_img, (temp_img.width, 160))
     temp_img = pygame.transform.flip(temp_img, True, False)
     bob_andando.append(temp_img)
 
@@ -285,7 +294,8 @@ CHAO = ALTURA * 5 // 6
 INIT = 0
 SELECT = 1
 GAME = 2
-QUIT = 3
+GAME_OVER = 3
+QUIT = 4
 
 #connstantes que estavam em jump_plataform:
 # Dados gerais do jogo.
