@@ -7,38 +7,265 @@ IMAGENS_DIR = path.join(path.dirname(__file__), 'imagens')
 MUSICAS_DIR = path.join(path.dirname(__file__), 'musicas')
 
 # Imagens usadas
-fundo_jogo = pygame.image.load("imagens/cenário 2.png")
-bob = pygame.image.load("imagens/Bob.png")
-gabriel = pygame.image.load("imagens/Gabriel.png")
+fundo_jogo = pygame.image.load("imagens/Cenário 1.jpg")
 
-# Criando dicionario com as imagens dos personagens
+# POLONI
+
+Poloni_dir = path.join(path.dirname(__file__), 'imagens', 'Poloni sprites') # Guardando endereço das imagens
+
+def define_animação(nome, endereço, posição, n, m):
+    lista = []
+    for i in range(1, n):
+        temp_img = pygame.image.load(path.join(endereço, f'{posição}/{i}.png'))
+        temp_img = pygame.transform.scale(temp_img, (temp_img.get_width() / m, temp_img.get_height() / m))
+        lista.append(temp_img)
+    return lista
+
+# animações_poloni = {}
 poloni_parado = []
 for i in range(1, 6):
-    temp_img = pygame.image.load(f"imagens/Poloni sprites/Parado/Poloni parado {i}.png")
+    temp_img = pygame.image.load(path.join(Poloni_dir, f'Parado/Poloni parado {i}.png'))
+    temp_img = pygame.transform.scale(temp_img, (60, 160))
     poloni_parado.append(temp_img)
+
+# animações_poloni['parado'] = define_animação("poloni", Poloni_dir, 'Parado', 6, 3)
 
 poloni_andando = []
 for i in range(1, 11):
-    temp_img = pygame.image.load(f"imagens/Poloni sprites/Andando/Poloni andando {i}.png")
+    temp_img = pygame.image.load(path.join(Poloni_dir, f'Andando/Poloni andando {i}.png'))
+    temp_img = pygame.transform.scale(temp_img, (60, 160))
     poloni_andando.append(temp_img)
 
 poloni_socando = []
 for i in range(1, 4):
-    temp_img = pygame.image.load(f"imagens/Poloni sprites/Soco/Poloni soco {i}.png")
+    temp_img = pygame.image.load(path.join(Poloni_dir, f'Soco/Poloni soco {i}.png'))
+    temp_img = pygame.transform.scale(temp_img, (60, 160))
     poloni_socando.append(temp_img)
 
 poloni_agachando = []
 for i in range(1, 3):
-    temp_img = pygame.image.load(f"imagens/Poloni sprites/Agachando/Poloni agachando {i}.png")
+    temp_img = pygame.image.load(path.join(Poloni_dir, f'Agachando/Poloni agachando {i}.png'))
+    temp_img = pygame.transform.scale(temp_img, (60, 160))
     poloni_agachando.append(temp_img)
+
+poloni_atacado = []
+for i in range(1, 5):
+    temp_img = pygame.image.load(path.join(Poloni_dir, f'Sendo atacado/Poloni atacado {i}.png'))
+    temp_img = pygame.transform.scale(temp_img, (60, 160))
+    poloni_atacado.append(temp_img)
+
+poloni_vencendo = []
+for i in range(1, 4):
+    temp_img = pygame.image.load(path.join(Poloni_dir, f'Vencendo/Poloni vencendo {i}.png'))
+    temp_img = pygame.transform.scale(temp_img, (60, 160))
+    poloni_vencendo.append(temp_img)
+
+poloni_morto = []
+for i in range(1, 9):
+    temp_img = pygame.image.load(path.join(Poloni_dir, f'Morto/Poloni morto {i}.png'))
+    temp_img = pygame.transform.scale(temp_img, (60, 160))
+    poloni_morto.append(temp_img)
+
+poloni_pulando = []
+for i in range(1, 7):
+    temp_img = pygame.image.load(path.join(Poloni_dir, f'Pulando/Poloni pulando {i}.png'))
+    temp_img = pygame.transform.scale(temp_img, (60, 160))
+    poloni_pulando.append(temp_img)
 
 imagens_poloni = {
     'PARADO': poloni_parado,
     'ANDANDO': poloni_andando,
     'SOCANDO': poloni_socando,
-    'AGACHANDO': poloni_agachando
+    'AGACHANDO': poloni_agachando,
+    'ATACADO': poloni_atacado,
+    'VENCENDO': poloni_vencendo,
+    'MORTO': poloni_morto,
+    'PULANDO': poloni_pulando
 }
 
+# BOB
+
+Bob_dir = path.join(path.dirname(__file__), 'imagens', 'Bob sprites')
+
+bob_parado = []
+for i in range(1, 4):
+    temp_img = pygame.image.load(path.join(Bob_dir, f'Parado/Bob parado {i}.png'))
+    # Todas as imagens do Bob são redimensionadas e espelhadas (Estão viradas para o lado errado nos arquivos)
+
+    temp_img = pygame.transform.scale(temp_img, (60, 160))
+    temp_img = pygame.transform.flip(temp_img, True, False)
+    bob_parado.append(temp_img)
+
+bob_andando = []
+for i in range(1, 11):
+    temp_img = pygame.image.load(path.join(Bob_dir, f'Andando/Bob andando {i}.png'))
+    temp_img = pygame.transform.scale(temp_img, (temp_img.width, 160))
+    temp_img = pygame.transform.flip(temp_img, True, False)
+    bob_andando.append(temp_img)
+
+bob_socando = []
+for i in range(1, 6):
+    temp_img = pygame.image.load(path.join(Bob_dir, f'Atacando/Bob atacando {i}.png'))
+    temp_img = pygame.transform.scale(temp_img, (60, 160))
+    temp_img = pygame.transform.flip(temp_img, True, False)
+    bob_socando.append(temp_img)
+
+bob_agachando = []
+temp_img = pygame.image.load(path.join(Bob_dir, f'Agachando/Bob agachando.png'))
+temp_img = pygame.transform.scale(temp_img, (60, 160))
+temp_img = pygame.transform.flip(temp_img, True, False)
+bob_agachando.append(temp_img)
+
+bob_atacado = []
+for i in range(1, 7):
+    temp_img = pygame.image.load(path.join(Bob_dir, f'Sendo atacado/Bob atacado {i}.png'))
+    temp_img = pygame.transform.scale(temp_img, (60, 160))
+    temp_img = pygame.transform.flip(temp_img, True, False)
+    bob_atacado.append(temp_img)
+
+imagens_bob = {
+    'PARADO': bob_parado,
+    'ANDANDO': bob_andando,
+    'SOCANDO': bob_socando,
+    'AGACHANDO': bob_agachando,
+    'ATACADO': bob_atacado
+    }
+
+# DANI
+Dani_dir = path.join(path.dirname(__file__), 'imagens', 'Dani sprites')
+
+dani_parado = []
+for i in range(1, 11):
+    temp_img = pygame.image.load(path.join(Dani_dir, f'Parado\{i}.png'))
+    # Todas as imagens da Dani são redimensionadas e espelhadas (Estão viradas para o lado errado nos arquivos)
+
+    temp_img = pygame.transform.scale(temp_img, (60, 160))
+    temp_img = pygame.transform.flip(temp_img, True, False)
+    dani_parado.append(temp_img)
+
+dani_andando = []
+for i in range(1, 11):
+    temp_img = pygame.image.load(path.join(Dani_dir, f'Andando\{i}.png'))
+    temp_img = pygame.transform.scale(temp_img, (60, 160))
+    temp_img = pygame.transform.flip(temp_img, True, False)
+    dani_andando.append(temp_img)
+
+dani_socando = []
+for i in range(1, 9):
+    temp_img = pygame.image.load(path.join(Dani_dir, f'Atacando\{i}.png'))
+    temp_img = pygame.transform.scale(temp_img, (60, 160))
+    temp_img = pygame.transform.flip(temp_img, True, False)
+    dani_socando.append(temp_img)
+
+dani_agachando = []
+for i in range(1, 3):
+    temp_img = pygame.image.load(path.join(Dani_dir, f'Agachando\{i}.png'))
+    temp_img = pygame.transform.scale(temp_img, (60, 160))
+    temp_img = pygame.transform.flip(temp_img, True, False)
+    dani_agachando.append(temp_img)
+
+dani_atacado = []
+for i in range(1, 5):
+    temp_img = pygame.image.load(path.join(Dani_dir, f'Sendo atacado\{i}.png'))
+    temp_img = pygame.transform.scale(temp_img, (60, 160))
+    temp_img = pygame.transform.flip(temp_img, True, False)
+    dani_atacado.append(temp_img)
+
+dani_vencendo = []
+for i in range(1, 14):
+    temp_img = pygame.image.load(path.join(Dani_dir, f'Vencendo\{i}.png'))
+    temp_img = pygame.transform.scale(temp_img, (60, 160))
+    temp_img = pygame.transform.flip(temp_img, True, False)
+    dani_vencendo.append(temp_img)
+
+dani_pulando = []
+for i in range(1, 5):
+    temp_img = pygame.image.load(path.join(Dani_dir, f'Pulando\{i}.png'))
+    temp_img = pygame.transform.scale(temp_img, (60, 160))
+    temp_img = pygame.transform.flip(temp_img, True, False)
+    dani_pulando.append(temp_img)
+
+dani_morto = []
+for i in range(1, 8):
+    temp_img = pygame.image.load(path.join(Dani_dir, f'Morto\{i}.png'))
+    temp_img = pygame.transform.scale(temp_img, (60, 160))
+    temp_img = pygame.transform.flip(temp_img, True, False)
+    dani_morto.append(temp_img)
+
+imagens_dani = {
+    'PARADO': dani_parado,
+    'ANDANDO': dani_andando,
+    'SOCANDO': dani_socando,
+    'AGACHANDO': dani_agachando,
+    'ATACADO': dani_atacado,
+    'VENCENDO': dani_vencendo,
+    'PULANDO': dani_pulando,
+    'MORTO': dani_morto
+    }
+
+# Julien
+Julien_dir = path.join(path.dirname(__file__), 'imagens', 'Julien sprites')
+
+julien_parado = []
+for i in range(1, 6):
+    temp_img = pygame.image.load(path.join(Julien_dir, f'Parado\{i}.png'))
+    # Todas as imagens do Julien são redimensionadas e espelhadas (Estão viradas para o lado errado nos arquivos)
+
+    temp_img = pygame.transform.scale(temp_img, (60, 160))
+    temp_img = pygame.transform.flip(temp_img, True, False)
+    julien_parado.append(temp_img)
+
+julien_andando = []
+for i in range(1, 12):
+    temp_img = pygame.image.load(path.join(Julien_dir, f'Andando\{i}.png'))
+    temp_img = pygame.transform.scale(temp_img, (60, 160))
+    temp_img = pygame.transform.flip(temp_img, True, False)
+    julien_andando.append(temp_img)
+
+julien_socando = []
+for i in range(1, 14):
+    temp_img = pygame.image.load(path.join(Julien_dir, f'Atacando\{i}.png'))
+    temp_img = pygame.transform.scale(temp_img, (60, 160))
+    temp_img = pygame.transform.flip(temp_img, True, False)
+    julien_socando.append(temp_img)
+
+julien_agachando = []
+for i in range(1, 3):
+    temp_img = pygame.image.load(path.join(Julien_dir, f'Agachando\{i}.png'))
+    temp_img = pygame.transform.scale(temp_img, (60, 160))
+    temp_img = pygame.transform.flip(temp_img, True, False)
+    julien_agachando.append(temp_img)
+
+julien_atacado = []
+for i in range(1, 4):
+    temp_img = pygame.image.load(path.join(Julien_dir, f'Sendo atacado\{i}.png'))
+    temp_img = pygame.transform.scale(temp_img, (60, 160))
+    temp_img = pygame.transform.flip(temp_img, True, False)
+    julien_atacado.append(temp_img)
+
+julien_pulando = []
+for i in range(1, 4):
+    temp_img = pygame.image.load(path.join(Julien_dir, f'Pulando\{i}.png'))
+    temp_img = pygame.transform.scale(temp_img, (60, 160))
+    temp_img = pygame.transform.flip(temp_img, True, False)
+    julien_pulando.append(temp_img)
+
+imagens_julien = {
+    'PARADO': julien_parado,
+    'ANDANDO': julien_andando,
+    'SOCANDO': julien_socando,
+    'AGACHANDO': julien_agachando,
+    'ATACADO': julien_atacado,
+    'PULANDO': julien_pulando
+    }
+
+#  Criando um dicionario que mapeia o nome do personagem ao seu dicionário de imagens
+imagens_personagens = {
+    'poloni': imagens_poloni,
+    'bob': imagens_bob,
+    'dani': imagens_dani,
+    'julien': imagens_julien
+}
 
 # Tamnho dos personagens
 player_width = 60
@@ -65,8 +292,10 @@ CHAO = ALTURA * 5 // 6
 
 # Estados possíveis do jogo
 INIT = 0
-GAME = 1
-QUIT = 2
+SELECT = 1
+GAME = 2
+GAME_OVER = 3
+QUIT = 4
 
 #connstantes que estavam em jump_plataform:
 # Dados gerais do jogo.
