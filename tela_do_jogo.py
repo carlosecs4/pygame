@@ -129,7 +129,7 @@ class Player1(pygame.sprite.Sprite):
     # Método para desenhar o jogador
     def draw(self, surface):
         imagem_ajustada = pygame.transform.flip(self.imagem, self.virar, False)
-        pygame.draw.rect(surface, (255, 0, 0), self.rect)
+        # pygame.draw.rect(surface, (255, 0, 0), self.rect)
         surface.blit(imagem_ajustada, (self.rect.x, self.rect.y))
     
     # Método para atualizar a animação do jogador
@@ -235,7 +235,7 @@ class Player2(pygame.sprite.Sprite):
             # Agachar
             if key[pygame.K_DOWN] and not self.agachar:
                 self.vel_y = 100
-                self.rect = pygame.Rect((self.rect.x, self.rect.y, 80, 90))
+                self.rect = pygame.Rect((self.rect.x, self.rect.y, 80, 180))
                 self.agachar = True 
 
             #ataque
@@ -293,7 +293,7 @@ class Player2(pygame.sprite.Sprite):
     # Método para desenhar o jogador
     def draw(self, surface):
         imagem_ajustada = pygame.transform.flip(self.imagem, self.virar, False)
-        pygame.draw.rect(surface, (255, 0, 0), self.rect)
+        # pygame.draw.rect(surface, (255, 0, 0), self.rect)
         surface.blit(imagem_ajustada, (self.rect.x, self.rect.y))
     
     # Método para atualizar a animação do jogador
