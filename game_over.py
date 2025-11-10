@@ -15,7 +15,7 @@ def game_over(tela, ganhador, estado):
     tela.fill(BLACK)
     
     #cria um texto que diz qual é o ganhador.
-    texto = font_ganhador.render(f'PLAYER {ganhador} WINS', True, VERMELHO)
+    texto = font_ganhador.render(f'PLAYER {ganhador} WINS', True, VERDE)
     texto2 = font_aviso.render('pressione ENTER para recomeçar', True, VERMELHO)
 
     text_rect = texto.get_rect(center=(LARGURA/2, ALTURA/2))

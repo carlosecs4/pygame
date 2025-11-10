@@ -24,6 +24,8 @@ class Player1(pygame.sprite.Sprite):
         self.virar = False
         self.agachar = False
         self.defender = False
+        self.morto = False
+        self.vencendo = False
         
         # Variáveis de animação
         self.animacoes = assets
@@ -134,12 +136,12 @@ class Player1(pygame.sprite.Sprite):
             if hits:
                 if target.defender == False:
                     target.health -= 10
+
+                    # Se o usuário estiver sem vida, indicar isso
                     if target.health <= 0:
                         target.health = 0
-                        self.movimento_atual = 'VENCENDO'
-                        self.frame = 0
-                        target.movimento_atual = 'MORTO'
-                        target.frame = 0
+                        self.vencendo = True
+                        target.morto = True
                 else:
                     target.health += 0
             pygame.draw.rect(surface, (0, 255, 0), attacking_rect)
@@ -194,6 +196,16 @@ class Player1(pygame.sprite.Sprite):
                 self.movimento_atual = 'AGACHANDO'
                 self.frame = 0
                 self.ultimo_update = pygame.time.get_ticks()
+        elif self.morto:
+            if self.movimento_atual != 'MORTO':
+                self.movimento_atual = 'MORTO'
+                self.frame = 0
+                self.ultimo_update = pygame.time.get_ticks()
+        elif self.vencendo:
+            if self.movimento_atual != 'VENCENDO':
+                self.movimento_atual = 'VENCENDO'
+                self.frame = 0
+                self.ultimo_update = pygame.time.get_ticks()
         else:
             # Se o jogador não está se movendo, a animação muda para parado
             if self.movimento_atual != 'PARADO':
@@ -232,6 +244,8 @@ class Player2(pygame.sprite.Sprite):
         self.virar = False
         self.agachar = False
         self.defender = False
+        self.morto = False
+        self.vencendo = False
         
         # Variáveis de animação
         self.animacoes = assets
@@ -331,6 +345,10 @@ class Player2(pygame.sprite.Sprite):
         elapsed_ticks_ataque = agora_ataque - self.ultimo_ataque
     
         if elapsed_ticks_ataque >= self.frame_ticks_ataque:
+            if target.health <= 0:
+                        target.health = 0
+                        self.vencendo = True
+                        target.morto = True
             self.ultimo_ataque = agora_ataque
             # Se o jogador estiver virado para o oponente ele ataca pra direita, se não para a esquerda
             if self.virar == False:
@@ -396,6 +414,16 @@ class Player2(pygame.sprite.Sprite):
                 self.movimento_atual = 'AGACHANDO'
                 self.frame = 0
                 self.ultimo_update = pygame.time.get_ticks()
+        elif self.morto:
+            if self.movimento_atual != 'MORTO':
+                self.movimento_atual = 'MORTO'
+                self.frame = 0
+                self.ultimo_update = pygame.time.get_ticks()
+        elif self.vencendo:
+            if self.movimento_atual != 'VENCENDO':
+                self.movimento_atual = 'VENCENDO'
+                self.frame = 0
+                self.ultimo_update = pygame.time.get_ticks()
         else:
             # Se o jogador não está se movendo, a animação muda para parado
             if self.movimento_atual != 'PARADO':
@@ -429,84 +457,122 @@ def desenha_barra_de_vida(health,x,y):
     pygame.draw.rect(tela,AMARELO, (x,y,400, 30))
     pygame.draw.rect(tela,VERMELHO, (x, y ,400 * ratio ,30))
 
-def game_screen(screen, p1, p2): # game_screen recebe os personagens selecionados
-    # Variável para o ajuste de velocidade
+def game_screen(screen, p1, p2):
     clock = pygame.time.Clock()
-
     desenha_fundo()
 
-    # Inicia a música de fundo
-    pygame.mixer.music.load(path.join(MUSICAS_DIR, 'Tela do jogo.ogg'))
-    pygame.mixer.music.set_volume(0.3)
-    pygame.mixer.music.play(loops=-1)
+    try:
+        pygame.mixer.music.load(path.join(MUSICAS_DIR, 'Tela do jogo.ogg'))
+        pygame.mixer.music.set_volume(0.3)
+        pygame.mixer.music.play(loops=-1)
+    except Exception:
+        pass
 
-    # Cria o sprite de 2 jogadores:
-    player1_personagem = p1
-    player2_personagem = p2
-
-    player1 = Player1(200, 400, imagens_personagens[player1_personagem])
-    player2 = Player2(700, 310, imagens_personagens[player2_personagem])
+    player1 = Player1(200, 400, imagens_personagens[p1])
+    player2 = Player2(700, 310, imagens_personagens[p2])
 
     state = GAME
 
+    # Variáveis para controlar a animação de vencer e morrer
+    fim_jogo = False
+    fim_jogo_tempo = 0
+    fim_jogo_tempo_max = 3000
+
     while state == GAME:
-
-        # Ajusta a velocidade do jogo.
         clock.tick(FPS)
-
         desenha_fundo()
 
-         # mostra a barra de vida
         desenha_barra_de_vida(player1.health, 20, 20)
-        desenha_barra_de_vida(player2.health, 580 ,20)
+        desenha_barra_de_vida(player2.health, 580, 20)
 
-        # Variável para poder atualizar todos os sprites de uma vez
+        # Só permitir inputs se os dois jogadores estiverem vivos
+        if fim_jogo == False:
+            player1.move(tela, player2)
+            player2.move(tela, player1)
 
-        player1.move(tela, player2)
-        player2.move(tela, player1)
-
+        # Sempre desenha e atualiza os players
         player1.draw(tela)
         player2.draw(tela)
-
-        # Atualiza a animação dos jogadores
         player1.update()
         player2.update()
 
-        # Processa os eventos (mouse, teclado, botão, etc).
         for event in pygame.event.get():
-
-            # Verifica se foi fechado.
             if event.type == pygame.QUIT:
                 state = QUIT
             
+            # Ignorar inputs normais durante fim de round
+            if fim_jogo:
+                continue
+
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_w or event.key == pygame.K_SPACE or event.key == pygame.K_a or event.key == pygame.K_d or event.key == pygame.K_s:
+                if event.key in (pygame.K_w, pygame.K_SPACE, pygame.K_a, pygame.K_d, pygame.K_s):
                     player1.move(tela, player2)
-                if event.key == pygame.K_r or event.key == pygame.K_t:
+                if event.key in (pygame.K_r, pygame.K_t):
                     player1.attack(tela, player2)
-                if event.key == pygame.K_UP or event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
+                if event.key in (pygame.K_UP, pygame.K_LEFT, pygame.K_RIGHT):
                     player2.move(tela, player1)
-                if event.key == pygame.K_RSHIFT or event.key == pygame.K_KP0:
+                if event.key in (pygame.K_RSHIFT, pygame.K_KP0):
                     player2.attack(tela, player1)
-            
+
             if event.type == pygame.KEYUP:
-                if event.key == pygame.K_r or event.key == pygame.K_t:
+                if event.key in (pygame.K_r, pygame.K_t):
                     player1.attacking = False
                 if event.key == pygame.K_s:
                     player1.agachar = False
-                if event.key == pygame.K_RSHIFT or event.key == pygame.K_KP0:
+                if event.key in (pygame.K_RSHIFT, pygame.K_KP0):
                     player2.attacking = False
                 if event.key == pygame.K_DOWN:
                     player2.agachar = False
 
-            #verifica se a vida dos personagens acabou
-            if player1.health <=0 or player2.health <= 0:
-                if player1.health <=0:
+        # Vê quando o fim do round começa
+        if fim_jogo == False:
+            if player1.health <= 0 or player2.health <= 0:
+                fim_jogo = True
+                fim_jogo_tempo = pygame.time.get_ticks()
+                if player1.health <= 0:
                     ganhador = 2
-                if player2.health <=0:
+                    player1.health = 0
+                    player1.morto = True
+                    player1.movimento_atual = 'MORTO'
+                    player1.frame = 0
+                    player1.ultimo_update = pygame.time.get_ticks()
+                    player2.vencendo = True
+                    player2.movimento_atual = 'VENCENDO'
+                    player2.frame = 0
+                    player2.ultimo_update = pygame.time.get_ticks()
+                else:
                     ganhador = 1
+                    player2.health = 0
+                    player2.morto = True
+                    player2.movimento_atual = 'MORTO'
+                    player2.frame = 0
+                    player2.ultimo_update = pygame.time.get_ticks()
+                    player1.vencendo = True
+                    player1.movimento_atual = 'VENCENDO'
+                    player1.frame = 0
+                    player1.ultimo_update = pygame.time.get_ticks()
+
+                player1.attacking = False
+                player2.attacking = False
+                pygame.mixer.music.stop()
+
+        # se no final da rodada: aguarda animação terminar (MORTO) ou timeout
+        if fim_jogo:
+            agora = pygame.time.get_ticks()
+            animacao_fim = False
+            # checar com segurança as listas de frames
+            if ganhador == 1:
+                frames_morto = player2.animacoes['MORTO']
+                if player2.frame >= len(frames_morto) - 1:
+                    animacao_fim = True
+            elif ganhador == 2:
+                frames_morto = player1.animacoes['MORTO']
+                if player1.frame >= len(frames_morto) - 1:
+                    animacao_fim = True
+
+            if animacao_fim or (agora - fim_jogo_tempo) >= fim_jogo_tempo_max:
                 state = GAME_OVER
 
         pygame.display.update()
-    
+
     return [state, ganhador]
