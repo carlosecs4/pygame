@@ -36,7 +36,7 @@ def game_over(tela, ganhador, estado):
             #verifica se apertou enter
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
-                    estado = INIT
+                    estado = SELECT
         
         tela.fill(PRETO)
 

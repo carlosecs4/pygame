@@ -25,7 +25,7 @@ def define_animação(nome, endereço, posição, n, m):
 poloni_parado = []
 for i in range(1, 6):
     temp_img = pygame.image.load(path.join(Poloni_dir, f'Parado/Poloni parado {i}.png'))
-    temp_img = pygame.transform.scale(temp_img, (60, 160))
+    temp_img = pygame.transform.scale(temp_img, (80, 180))
     poloni_parado.append(temp_img)
 
 # animações_poloni['parado'] = define_animação("poloni", Poloni_dir, 'Parado', 6, 3)

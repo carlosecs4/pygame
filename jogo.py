@@ -30,7 +30,6 @@ while estado != QUIT:
         ganhador = seleções[1]
     elif estado == GAME_OVER:
         estado = game_over(tela, ganhador, estado)
-        print(estado)
     else:
         estado = QUIT
 

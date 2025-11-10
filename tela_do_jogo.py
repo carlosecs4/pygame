@@ -23,7 +23,7 @@ class Player1(pygame.sprite.Sprite):
         self.health = 100
         self.virar = False
         self.agachar = False
-        self.defender = True
+        self.defender = False
         
         # Variáveis de animação
         self.animacoes = assets
@@ -39,7 +39,7 @@ class Player1(pygame.sprite.Sprite):
         
         # Só será possível atacar a cada 200 milissegundos
         self.ultimo_ataque = pygame.time.get_ticks()  # Cooldown para o ataque
-        self.frame_ticks_ataque = 200  # Tempo entre ataques
+        self.frame_ticks_ataque = 600  # Tempo entre ataques
 
     def move(self, surface, target):
         SPEED = 10
@@ -49,7 +49,8 @@ class Player1(pygame.sprite.Sprite):
 
         # Essas duas precisam ser falsas para atualizar a animação se o jogador soltar as teclas de movimento ou ataque
         self.correndo = False
-        self.attacking = False
+        self.defender = False
+        #self.attacking = False
 
         #teclas precionadas
         key = pygame.key.get_pressed()
@@ -78,12 +79,19 @@ class Player1(pygame.sprite.Sprite):
             if key[pygame.K_r] or key[pygame.K_t]:
                 ataque_executado = self.attack(surface, target) # Checar se o ataque foi executado
                 if ataque_executado:
+                    # Inicia a animação de ataque do primeiro frame
                     self.attacking = True
+                    self.movimento_atual = 'SOCANDO'
+                    self.frame = 0
+                    self.ultimo_update = pygame.time.get_ticks()
                     #determinando qual tipo de ataque será usado
                     if key[pygame.K_r]:
                         self.attack_type = 1
                     if key[pygame.K_t]:
                         self.attack_type = 2
+            # Defesa
+            elif key[pygame.K_e]:
+                self.defender = True
         
         #Garantir que os jogadores estão virados um pro outro
         if target.rect.centerx > self.rect.centerx:
@@ -123,8 +131,15 @@ class Player1(pygame.sprite.Sprite):
             hits = attacking_rect.colliderect(target)
             self.attacking = True
             if hits:
-                target.health -= 10
+                if target.defender == False:
+                    target.health -= 10
+                else:
+                    target.health += 0 
             pygame.draw.rect(surface, (0, 255, 0), attacking_rect)
+            
+            return True # Retorna True se o ataque não tiver em cooldown
+        else:
+            return False
 
     # Método para desenhar o jogador
     def draw(self, surface):
@@ -134,6 +149,27 @@ class Player1(pygame.sprite.Sprite):
     
     # Método para atualizar a animação do jogador
     def update(self):
+        # Ataque precisa ser um caso especial, mesmo se não estiver 
+        # atacando a animação precisa ir até o final
+        if self.movimento_atual == 'SOCANDO':
+            agora = pygame.time.get_ticks()
+            tempo = agora - self.ultimo_update
+
+            # Atualiza a imagem atual do frame
+            self.imagem = self.animacoes[self.movimento_atual][self.frame]
+
+            if tempo > self.frame_ticks_animacao:
+                self.ultimo_update = agora
+                self.frame += 1
+                # se passou do último frame da animação de soco
+                #  a animação acaba e o estado reseta
+                if self.frame >= len(self.animacoes[self.movimento_atual]):
+                    self.attacking = False
+                    self.movimento_atual = 'PARADO'
+                    self.frame = 0
+                    self.ultimo_update = agora
+            return # Para a função update()
+    
         # Checa o estado atual para definir a animação correta
         if self.attacking:
             # Se o movimento novo não for o mesmo que o anterior, reinicia a animação
@@ -176,6 +212,7 @@ class Player2(pygame.sprite.Sprite):
     def __init__(self, x, y, assets):
         pygame.sprite.Sprite.__init__(self)
 
+        #variaveis que indicam o movimento
         self.x = x
         self.y = y
         self.rect = pygame.Rect((self.x, self.y, 80, 180))
@@ -203,7 +240,7 @@ class Player2(pygame.sprite.Sprite):
         
         # Só será possível atacar a cada 200 milissegundos
         self.ultimo_ataque = pygame.time.get_ticks()  # Cooldown para o ataque
-        self.frame_ticks_ataque = 200  # Tempo entre ataques
+        self.frame_ticks_ataque = 600  # Tempo entre ataques
 
     def move(self, surface, target):
         SPEED = 10
@@ -213,7 +250,9 @@ class Player2(pygame.sprite.Sprite):
 
         # Essas duas precisam ser falsas para atualizar a animação se o jogador soltar as teclas de movimento ou ataque
         self.correndo = False
-        self.attacking = False 
+        self.defender = False
+        #self.attacking = False
+
 
         #teclas precionadas
         key = pygame.key.get_pressed()
@@ -242,12 +281,19 @@ class Player2(pygame.sprite.Sprite):
             if key[pygame.K_RSHIFT] or key[pygame.K_KP0]:
                 ataque_executado = self.attack(surface, target) # Checar se o ataque foi executado
                 if ataque_executado:
+                    # Inicia a animação de ataque do primeiro frame
                     self.attacking = True
+                    self.movimento_atual = 'SOCANDO'
+                    self.frame = 0
+                    self.ultimo_update = pygame.time.get_ticks()
                     #determinando qual tipo de ataque será usado
                     if key[pygame.K_RSHIFT]:
                         self.attack_type = 1
                     if key[pygame.K_KP0]:
                         self.attack_type = 2
+            # Defesa
+            elif key[pygame.K_KP1]:
+                self.defender = True
         
         #Garantir que os jogadores estão virados um pro outro
         if target.rect.centerx > self.rect.centerx:
@@ -287,8 +333,15 @@ class Player2(pygame.sprite.Sprite):
             hits = attacking_rect.colliderect(target)
             self.attacking = True
             if hits:
-                target.health -= 10
+                if target.defender == False:
+                    target.health -= 10
+                else:
+                    target.health += 0
             pygame.draw.rect(surface, (0, 255, 0), attacking_rect)
+            
+            return True # Retorna True se o ataque não tiver em cooldown
+        else:
+            return False
 
     # Método para desenhar o jogador
     def draw(self, surface):
@@ -298,6 +351,27 @@ class Player2(pygame.sprite.Sprite):
     
     # Método para atualizar a animação do jogador
     def update(self):
+        # Ataque precisa ser um caso especial, mesmo se não estiver 
+        # atacando a animação precisa ir até o final
+        if self.movimento_atual == 'SOCANDO':
+            agora = pygame.time.get_ticks()
+            tempo = agora - self.ultimo_update
+
+            # Atualiza a imagem atual do frame
+            self.imagem = self.animacoes[self.movimento_atual][self.frame]
+
+            if tempo > self.frame_ticks_animacao:
+                self.ultimo_update = agora
+                self.frame += 1
+                # se passou do último frame da animação de soco
+                #  a animação acaba e o estado reseta
+                if self.frame >= len(self.animacoes[self.movimento_atual]):
+                    self.attacking = False
+                    self.movimento_atual = 'PARADO'
+                    self.frame = 0
+                    self.ultimo_update = agora
+            return # Para a função update()
+    
         # Checa o estado atual para definir a animação correta
         if self.attacking:
             # Se o movimento novo não for o mesmo que o anterior, reinicia a animação
