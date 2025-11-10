@@ -25,7 +25,7 @@ def define_animação(nome, endereço, posição, n, m):
 poloni_parado = []
 for i in range(1, 6):
     temp_img = pygame.image.load(path.join(Poloni_dir, f'Parado/Poloni parado {i}.png'))
-    temp_img = pygame.transform.scale(temp_img, (60, 160))
+    temp_img = pygame.transform.scale(temp_img, (80, 180))
     poloni_parado.append(temp_img)
 
 # animações_poloni['parado'] = define_animação("poloni", Poloni_dir, 'Parado', 6, 3)
@@ -99,7 +99,7 @@ for i in range(1, 4):
 bob_andando = []
 for i in range(1, 11):
     temp_img = pygame.image.load(path.join(Bob_dir, f'Andando/Bob andando {i}.png'))
-    temp_img = pygame.transform.scale(temp_img, (temp_img.width, 160))
+    temp_img = pygame.transform.scale(temp_img, (60, 160))
     temp_img = pygame.transform.flip(temp_img, True, False)
     bob_andando.append(temp_img)
 
