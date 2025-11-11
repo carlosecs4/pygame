@@ -109,8 +109,8 @@ class Player1(pygame.sprite.Sprite):
 
         if self.rect.left + dx < 0:
             dx = - self.rect.left
-        if self.rect.right + dx > WIDTH:
-            dx = WIDTH - self.rect.right
+        if self.rect.right + dx > LARGURA:
+            dx = LARGURA - self.rect.right
         if self.rect.bottom + dy > HEIGHT - 230:
             self.vel_y = 0
             self.jump = False
@@ -224,11 +224,16 @@ class Player1(pygame.sprite.Sprite):
         agora = pygame.time.get_ticks()
         tempo = agora - self.ultimo_update
 
+        # Garantir que o frame da animação está dentro dos limites antes o indíce
+        num_frames = len(self.animacoes[self.movimento_atual])
+        if self.frame >= num_frames:
+            self.frame = 0
+        
         self.imagem = self.animacoes[self.movimento_atual][self.frame]
         if tempo > self.frame_ticks_animacao:
             self.ultimo_update = agora
             self.frame += 1
-            if self.frame >= len(self.animacoes[self.movimento_atual]):
+            if self.frame >= num_frames:
                 self.frame = 0
 
 # Classe para o player 2 (mesma coisa que o P1, mas com teclas de movimento e ataque diferentes)
@@ -335,8 +340,8 @@ class Player2(pygame.sprite.Sprite):
 
         if self.rect.left + dx < 0:
             dx = - self.rect.left
-        if self.rect.right + dx > WIDTH:
-            dx = WIDTH - self.rect.right
+        if self.rect.right + dx > LARGURA:
+            dx = LARGURA- self.rect.right
         if self.rect.bottom + dy > HEIGHT - 230:
             self.vel_y = 0
             self.jump = False
@@ -450,11 +455,16 @@ class Player2(pygame.sprite.Sprite):
         agora = pygame.time.get_ticks()
         tempo = agora - self.ultimo_update
 
+        # Garantir que o frame está dentro dos limites antes de acessar
+        num_frames = len(self.animacoes[self.movimento_atual])
+        if self.frame >= num_frames:
+            self.frame = 0
+        
         self.imagem = self.animacoes[self.movimento_atual][self.frame]
         if tempo > self.frame_ticks_animacao:
             self.ultimo_update = agora
             self.frame += 1
-            if self.frame >= len(self.animacoes[self.movimento_atual]):
+            if self.frame >= num_frames:
                 self.frame = 0
 
 # Função para carregar o fundo do jogo
