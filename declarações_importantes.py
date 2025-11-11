@@ -143,6 +143,9 @@ julien_atacado = define_animação_virada(Julien_dir, 'Sendo atacado', 4)
 julien_pulando = define_animação_virada(Julien_dir, 'Pulando', 4)
 julien_morto = define_animação_virada(Julien_dir, "Morto", 4)
 julien_vencendo = define_animação_virada(Julien_dir, "Vencendo", 8)
+# Especial é menor então precisa ser definido manualmente
+julien_especial_img = pygame.image.load(path.join(Julien_dir, 'Especial/1.png'))
+julien_especial_img = pygame.transform.scale(julien_especial_img, (julien_especial_img.get_width() * 80 / julien_especial_img.get_height(), 80))
 
 imagens_julien = {
     'PARADO': julien_parado,
@@ -152,7 +155,8 @@ imagens_julien = {
     'ATACADO': julien_atacado,
     'PULANDO': julien_pulando,
     'MORTO': julien_morto,
-    'VENCENDO': julien_vencendo
+    'VENCENDO': julien_vencendo,
+    'ESPECIAL': julien_especial_img
     }
 
 # MÁRCIO
@@ -162,7 +166,7 @@ Marcio_dir = path.join(path.dirname(__file__), 'imagens', 'Marcio sprites')
 # Animações do Márcio
 marcio_parado = define_animação_virada(Marcio_dir, 'Parado', 7)
 marcio_andando = define_animação_virada(Marcio_dir, 'Andando', 9)
-marcio_socando = define_animação_virada(Marcio_dir, 'Atacando', 14)
+marcio_socando = define_animação_virada(Marcio_dir, 'Socando', 14)
 marcio_agachando = define_animação_virada(Marcio_dir, 'Agachando', 3)
 marcio_atacado = define_animação_virada(Marcio_dir, 'Sendo atacado', 5)
 marcio_pulando = define_animação_virada(Marcio_dir, 'Pulando', 6)
@@ -213,6 +217,16 @@ imagens_personagens = {
     'gabriel': imagens_gabriel
 }
 
+# Dicionário de sprites de especiais (None para personagens sem sprite customizado)
+especiais_sprites = {
+    'poloni': None,
+    'bob': None,
+    'dani': None,
+    'julien': julien_especial_img,
+    'marcio': None,
+    'gabriel': None
+}
+
 # Dados gerais do jogo.
 TITULO = 'INSPER FIGHT'
 LARGURA = 1000 # Largura da tela
@@ -241,4 +255,4 @@ HEIGHT = 720 # Altura
 FPS = 60 # Frames por segundo
 
 # Define a aceleração da gravidade
-GRAVITY = 6
+GRAVITY = 5

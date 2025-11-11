@@ -19,7 +19,6 @@ class Player1(pygame.sprite.Sprite):
         self.jump = False
         self.attacking = False 
         self.correndo = False
-        self.attack_type = 0
         self.health = 100
         self.virar = False
         self.agachar = False
@@ -42,6 +41,10 @@ class Player1(pygame.sprite.Sprite):
         # Só será possível atacar a cada 200 milissegundos
         self.ultimo_ataque = pygame.time.get_ticks()  # Cooldown para o ataque
         self.frame_ticks_ataque = 150 * (len(assets['SOCANDO']) + 1)  # Tempo entre ataques (50 ms para cada frame de animação)
+        
+        # Cooldown para projéteis
+        self.ultimo_especial = pygame.time.get_ticks()
+        self.cooldown_especial = 500  # Cooldown entre especiais
 
     def move(self, surface, target):
         SPEED = 10
@@ -69,7 +72,7 @@ class Player1(pygame.sprite.Sprite):
 
             #pular
             if key[pygame.K_w] and not self.jump:
-                self.vel_y = -150
+                self.vel_y = -200
                 self.jump = True
                 self.movimento_atual = 'PULANDO' 
                 
@@ -79,8 +82,8 @@ class Player1(pygame.sprite.Sprite):
                 self.rect = pygame.Rect((self.rect.x, self.rect.y, 80, 180))
                 self.agachar = True 
 
-            #ataque
-            if key[pygame.K_r] or key[pygame.K_t]:
+            # Ataque comum
+            if key[pygame.K_r]:
                 ataque_executado = self.attack(surface, target) # Checar se o ataque foi executado
                 if ataque_executado:
                     # Inicia a animação de ataque do primeiro frame
@@ -88,11 +91,6 @@ class Player1(pygame.sprite.Sprite):
                     self.movimento_atual = 'SOCANDO'
                     self.frame = 0
                     self.ultimo_update = pygame.time.get_ticks()
-                    #determinando qual tipo de ataque será usado
-                    if key[pygame.K_r]:
-                        self.attack_type = 1
-                    if key[pygame.K_t]:
-                        self.attack_type = 2
             # Defesa
             elif key[pygame.K_e]:
                 self.defender = True
@@ -136,7 +134,7 @@ class Player1(pygame.sprite.Sprite):
             self.attacking = True
             if hits:
                 if target.defender == False:
-                    target.health -= 2 * (len(self.animacoes['SOCANDO'])) // 2 # Dano é propocional ao tamano da animação
+                    target.health -= (3 * len(self.animacoes['SOCANDO'])) // 2 # Dano é propocional ao tamano da animação
 
                     # Se o usuário estiver sem vida, indicar isso
                     if target.health <= 0:
@@ -150,6 +148,25 @@ class Player1(pygame.sprite.Sprite):
             return True # Retorna True se o ataque não tiver em cooldown
         else:
             return False
+    
+    def shoot(self, especiais_group, target, sprite_especial):
+        # Verifica cooldown
+        agora = pygame.time.get_ticks()
+        elapsed = agora - self.ultimo_especial
+        
+        if elapsed >= self.cooldown_especial:
+            self.ultimo_especial = agora
+            # Especial será lançado do centro do personagem
+            x = self.rect.centerx
+            y = self.rect.centery
+            # Direção determinada por self.virar
+            direcao = self.virar
+            
+            # Criar e adicionar o especial ao grupo
+            novo_especial = especial(x, y, direcao, target, sprite_especial)
+            especiais_group.add(novo_especial)
+            return True
+        return False
 
     # Método para desenhar o jogador
     def draw(self, surface):
@@ -250,7 +267,6 @@ class Player2(pygame.sprite.Sprite):
         self.jump = False
         self.attacking = False 
         self.correndo = False
-        self.attack_type = 0
         self.health = 100
         self.virar = False
         self.agachar = False
@@ -273,6 +289,10 @@ class Player2(pygame.sprite.Sprite):
         # Só será possível atacar a cada 200 milissegundos
         self.ultimo_ataque = pygame.time.get_ticks()  # Cooldown para o ataque
         self.frame_ticks_ataque = 150 * (len(assets['SOCANDO']) + 1)  # Tempo entre ataques (50 ms para cada frame de animação)
+        
+        # Cooldown para projéteis
+        self.ultimo_especial = pygame.time.get_ticks()
+        self.cooldown_especial = 500  # Cooldown entre especiais
 
     def move(self, surface, target):
         SPEED = 10
@@ -300,7 +320,7 @@ class Player2(pygame.sprite.Sprite):
 
             #pular
             if key[pygame.K_UP] and not self.jump:
-                self.vel_y = -150
+                self.vel_y = -200
                 self.jump = True
                 self.movimento_atual = 'PULANDO' 
                 
@@ -310,8 +330,8 @@ class Player2(pygame.sprite.Sprite):
                 self.rect = pygame.Rect((self.rect.x, self.rect.y, 80, 180))
                 self.agachar = True 
 
-            #ataque
-            if key[pygame.K_RSHIFT] or key[pygame.K_KP0]:
+            # Ataque comum
+            if key[pygame.K_RSHIFT]:
                 ataque_executado = self.attack(surface, target) # Checar se o ataque foi executado
                 if ataque_executado:
                     # Inicia a animação de ataque do primeiro frame
@@ -319,11 +339,6 @@ class Player2(pygame.sprite.Sprite):
                     self.movimento_atual = 'SOCANDO'
                     self.frame = 0
                     self.ultimo_update = pygame.time.get_ticks()
-                    #determinando qual tipo de ataque será usado
-                    if key[pygame.K_RSHIFT]:
-                        self.attack_type = 1
-                    if key[pygame.K_KP0]:
-                        self.attack_type = 2
             # Defesa
             elif key[pygame.K_KP1]:
                 self.defender = True
@@ -341,7 +356,7 @@ class Player2(pygame.sprite.Sprite):
         if self.rect.left + dx < 0:
             dx = - self.rect.left
         if self.rect.right + dx > LARGURA:
-            dx = LARGURA- self.rect.right
+            dx = LARGURA - self.rect.right
         if self.rect.bottom + dy > HEIGHT - 230:
             self.vel_y = 0
             self.jump = False
@@ -367,7 +382,7 @@ class Player2(pygame.sprite.Sprite):
             self.attacking = True
             if hits:
                 if target.defender == False:
-                    target.health -= 2 * (len(self.animacoes['SOCANDO'])) // 2 # Dano é propocional ao tamano da animação
+                    target.health -= (3 * len(self.animacoes['SOCANDO'])) // 2 # Dano é propocional ao tamano da animação
 
                     # Se o usuário estiver sem vida, indicar isso
                     if target.health <= 0:
@@ -381,6 +396,25 @@ class Player2(pygame.sprite.Sprite):
             return True # Retorna True se o ataque não tiver em cooldown
         else:
             return False
+    
+    def shoot(self, especiais_group, target, sprite_especial):
+        # Verifica cooldown
+        agora = pygame.time.get_ticks()
+        elapsed = agora - self.ultimo_especial
+        
+        if elapsed >= self.cooldown_especial:
+            self.ultimo_especial = agora
+            # Especial será lançado do centro do personagem
+            x = self.rect.centerx
+            y = self.rect.centery
+            # Direção determinada por self.virar
+            direcao = self.virar
+            
+            # Criar e adicionar o especial ao grupo
+            novo_especial = especial(x, y, direcao, target, sprite_especial)
+            especiais_group.add(novo_especial)
+            return True
+        return False
 
     # Método para desenhar o jogador
     def draw(self, surface):
@@ -455,7 +489,7 @@ class Player2(pygame.sprite.Sprite):
         agora = pygame.time.get_ticks()
         tempo = agora - self.ultimo_update
 
-        # Garantir que o frame está dentro dos limites antes de acessar
+        # Garantir que o frame da animação está dentro dos limites antes o indíce
         num_frames = len(self.animacoes[self.movimento_atual])
         if self.frame >= num_frames:
             self.frame = 0
@@ -466,6 +500,38 @@ class Player2(pygame.sprite.Sprite):
             self.frame += 1
             if self.frame >= num_frames:
                 self.frame = 0
+
+# Classe do especial
+class especial(pygame.sprite.Sprite):
+    def __init__(self, x, y, direcao, target, sprite):
+        pygame.sprite.Sprite.__init__(self)
+        
+        self.speed = 10
+        self.direcao = direcao
+        self.target = target
+        self.image = sprite
+        
+        # Ajustar a direção do especial
+        if direcao:
+            self.image = pygame.transform.flip(self.image, True, False)
+        
+        self.rect = self.image.get_rect()
+        self.rect.centerx = x
+        self.rect.centery = y
+        
+    def update(self):
+        # Lança o especial sem gravidade
+        if self.direcao:  
+            self.rect.x -= self.speed
+        else:  # Direita
+            self.rect.x += self.speed
+        
+        # Remove o projétil se sair da tela
+        if self.rect.right < 0 or self.rect.left + self.speed > LARGURA:
+            self.kill()
+    
+    def draw(self, surface):
+        surface.blit(self.image, self.rect)
 
 # Função para carregar o fundo do jogo
 def desenha_fundo():
@@ -485,15 +551,15 @@ def game_screen(screen, p1, p2):
     clock = pygame.time.Clock()
     desenha_fundo()
 
-    try:
-        pygame.mixer.music.load(path.join(MUSICAS_DIR, 'Tela do jogo.ogg'))
-        pygame.mixer.music.set_volume(0.3)
-        pygame.mixer.music.play(loops=-1)
-    except Exception:
-        pass
+    pygame.mixer.music.load(path.join(MUSICAS_DIR, 'Tela do jogo.ogg'))
+    pygame.mixer.music.set_volume(0.3)
+    pygame.mixer.music.play(loops=-1)
 
     player1 = Player1(200, 400, imagens_personagens[p1])
     player2 = Player2(700, 400, imagens_personagens[p2])
+
+    # Grupo de sprites para os projéteis
+    especiais = pygame.sprite.Group()
 
     state = GAME
 
@@ -519,6 +585,27 @@ def game_screen(screen, p1, p2):
         player2.draw(tela)
         player1.update()
         player2.update()
+        
+        # Atualizar e desenhar projéteis
+        especiais.update()
+        for especial in especiais:
+            especial.draw(tela)
+            
+            # Verificar colisão com o target
+            if pygame.sprite.collide_rect(especial, especial.target):
+                # Especial acertou o target
+                if especial.target.defender == False:
+                    especial.target.health -= 20  
+                    # Se o target estiver morto
+                    if especial.target.health <= 0:
+                        especial.target.health = 0
+                        if especial.target == player1:
+                            player2.vencendo = True
+                            player1.morto = True
+                        else:
+                            player1.vencendo = True
+                            player2.morto = True
+                especial.kill()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -531,19 +618,23 @@ def game_screen(screen, p1, p2):
             if event.type == pygame.KEYDOWN:
                 if event.key in (pygame.K_w, pygame.K_SPACE, pygame.K_a, pygame.K_d, pygame.K_s):
                     player1.move(tela, player2)
-                if event.key in (pygame.K_r, pygame.K_t):
+                if event.key == pygame.K_r:
                     player1.attack(tela, player2)
+                if event.key == pygame.K_t:
+                    player1.shoot(especiais, player2, imagens_personagens[p1]['ESPECIAL'])
                 if event.key in (pygame.K_UP, pygame.K_LEFT, pygame.K_RIGHT):
                     player2.move(tela, player1)
-                if event.key in (pygame.K_RSHIFT, pygame.K_KP0):
+                if event.key == pygame.K_RSHIFT:
                     player2.attack(tela, player1)
+                if event.key == pygame.K_KP0:
+                    player2.shoot(especiais, player1, imagens_personagens[p2]['ESPECIAL'])
 
             if event.type == pygame.KEYUP:
-                if event.key in (pygame.K_r, pygame.K_t):
+                if event.key == pygame.K_r:
                     player1.attacking = False
                 if event.key == pygame.K_s:
                     player1.agachar = False
-                if event.key in (pygame.K_RSHIFT, pygame.K_KP0):
+                if event.key == pygame.K_RSHIFT:
                     player2.attacking = False
                 if event.key == pygame.K_DOWN:
                     player2.agachar = False
