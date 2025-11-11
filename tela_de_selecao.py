@@ -10,12 +10,11 @@ def tela_selecao(tela):
     selecionado = 0
 
     # Lista de personagens disponíveis
-    personagens = ['poloni', 'bob', 'dani', 'julien', 'marcio']
     font = pygame.font.Font("fontes/mk5style.ttf", 30)
 
     # Lista com as imagens dos personagens
     imagens_personagens = []
-    for personagem in personagens:
+    for personagem in nomes:
         imagens_personagens.append(pygame.image.load(path.join(IMAGENS_DIR, f'{personagem} sprites\Foto para seleção\{personagem} perfil.jpg')))
 
      # Carrega e toca música de fundo (COLOCA ISSO NO ASSETS DEPOIS)
@@ -45,7 +44,7 @@ def tela_selecao(tela):
                 elif event.key == pygame.K_RETURN:
                     selecionando = False
                     estado = GAME  # Prosseguir para o jogo após seleção
-                    personagem1 = personagens[selecionado]
+                    personagem1 = nomes[selecionado]
         
         tela.fill(PRETO)
         
@@ -81,7 +80,7 @@ def tela_selecao(tela):
                 elif event.key == pygame.K_RIGHT:
                     selecionado = (selecionado + 1) % len(imagens_personagens)
                 elif event.key == pygame.K_RETURN:
-                    personagem2 = personagens[selecionado]
+                    personagem2 = nomes[selecionado]
                     if personagem2 == personagem1:
                         # Evitar que o player 2 escolha o mesmo personagem do player 1
                         aviso = font.render("Personagem já selecionado! Escolha outro!", True, VERMELHO)

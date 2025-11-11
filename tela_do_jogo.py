@@ -41,7 +41,7 @@ class Player1(pygame.sprite.Sprite):
         
         # Só será possível atacar a cada 200 milissegundos
         self.ultimo_ataque = pygame.time.get_ticks()  # Cooldown para o ataque
-        self.frame_ticks_ataque = 600  # Tempo entre ataques
+        self.frame_ticks_ataque = 150 * (len(assets['SOCANDO']) + 1)  # Tempo entre ataques (50 ms para cada frame de animação)
 
     def move(self, surface, target):
         SPEED = 10
@@ -70,7 +70,8 @@ class Player1(pygame.sprite.Sprite):
             #pular
             if key[pygame.K_w] and not self.jump:
                 self.vel_y = -150
-                self.jump = True 
+                self.jump = True
+                self.movimento_atual = 'PULANDO' 
                 
             # Agachar
             if key[pygame.K_s] and not self.agachar:
@@ -135,7 +136,7 @@ class Player1(pygame.sprite.Sprite):
             self.attacking = True
             if hits:
                 if target.defender == False:
-                    target.health -= 10
+                    target.health -= 2 * (len(self.animacoes['SOCANDO'])) // 2 # Dano é propocional ao tamano da animação
 
                     # Se o usuário estiver sem vida, indicar isso
                     if target.health <= 0:
@@ -206,6 +207,11 @@ class Player1(pygame.sprite.Sprite):
                 self.movimento_atual = 'VENCENDO'
                 self.frame = 0
                 self.ultimo_update = pygame.time.get_ticks()
+        elif self.jump:
+            if self.movimento_atual != 'PULANDO':
+                self.movimento_atual = 'PULANDO'
+                self.frame = 0
+                self.ultimo_update = pygame.time.get_ticks()
         else:
             # Se o jogador não está se movendo, a animação muda para parado
             if self.movimento_atual != 'PARADO':
@@ -261,7 +267,7 @@ class Player2(pygame.sprite.Sprite):
         
         # Só será possível atacar a cada 200 milissegundos
         self.ultimo_ataque = pygame.time.get_ticks()  # Cooldown para o ataque
-        self.frame_ticks_ataque = 600  # Tempo entre ataques
+        self.frame_ticks_ataque = 150 * (len(assets['SOCANDO']) + 1)  # Tempo entre ataques (50 ms para cada frame de animação)
 
     def move(self, surface, target):
         SPEED = 10
@@ -290,7 +296,8 @@ class Player2(pygame.sprite.Sprite):
             #pular
             if key[pygame.K_UP] and not self.jump:
                 self.vel_y = -150
-                self.jump = True 
+                self.jump = True
+                self.movimento_atual = 'PULANDO' 
                 
             # Agachar
             if key[pygame.K_DOWN] and not self.agachar:
@@ -345,10 +352,6 @@ class Player2(pygame.sprite.Sprite):
         elapsed_ticks_ataque = agora_ataque - self.ultimo_ataque
     
         if elapsed_ticks_ataque >= self.frame_ticks_ataque:
-            if target.health <= 0:
-                        target.health = 0
-                        self.vencendo = True
-                        target.morto = True
             self.ultimo_ataque = agora_ataque
             # Se o jogador estiver virado para o oponente ele ataca pra direita, se não para a esquerda
             if self.virar == False:
@@ -359,7 +362,13 @@ class Player2(pygame.sprite.Sprite):
             self.attacking = True
             if hits:
                 if target.defender == False:
-                    target.health -= 10
+                    target.health -= 2 * (len(self.animacoes['SOCANDO'])) // 2 # Dano é propocional ao tamano da animação
+
+                    # Se o usuário estiver sem vida, indicar isso
+                    if target.health <= 0:
+                        target.health = 0
+                        self.vencendo = True
+                        target.morto = True
                 else:
                     target.health += 0
             pygame.draw.rect(surface, (0, 255, 0), attacking_rect)
@@ -422,6 +431,11 @@ class Player2(pygame.sprite.Sprite):
         elif self.vencendo:
             if self.movimento_atual != 'VENCENDO':
                 self.movimento_atual = 'VENCENDO'
+                self.frame = 0
+                self.ultimo_update = pygame.time.get_ticks()
+        elif self.jump:
+            if self.movimento_atual != 'PULANDO':
+                self.movimento_atual = 'PULANDO'
                 self.frame = 0
                 self.ultimo_update = pygame.time.get_ticks()
         else:

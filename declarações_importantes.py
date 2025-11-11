@@ -12,11 +12,7 @@ fundo_jogo = pygame.image.load(path.join(IMAGENS_DIR, "Cenário 1.jpg"))
 posições = ['parado', 'andando', 'socando', 'agachando', 'atacado','vencendo', 'morto', 'pulando']
 nomes = ['poloni', 'bob', 'dani', 'julien', 'marcio', 'gabriel']
 
-# POLONI
-
-Poloni_dir = path.join(path.dirname(__file__), 'imagens', 'Poloni sprites') # Guardando endereço das imagens
-
-# def define_animação(nome, endereço, posição):
+# def define_animação(nome, endereço, posição)
 #     lista = []
 #     n = len(os.listdir(f'{nome}\{posição}'))
 #     for i in range(1, n):
@@ -26,9 +22,8 @@ Poloni_dir = path.join(path.dirname(__file__), 'imagens', 'Poloni sprites') # Gu
 #     return lista
 
 
-def define_animação(nome, endereço, posição):
+def define_animação(endereço, posição, n):
     lista = []
-    n = len(os.listdir(f'{nome}\{posição}'))
     for i in range(1, n):
         temp_img = pygame.image.load(path.join(endereço, f'{posição}\{i}.png'))
         temp_img = pygame.transform.scale(temp_img, (temp_img.get_width() * 160 / temp_img.get_height(), 160))
@@ -46,6 +41,10 @@ def define_animação(nome, endereço, posição):
 #         lista.append(temp_img)
 #     return lista
 
+# POLONI
+
+Poloni_dir = path.join(path.dirname(__file__), 'imagens', 'Poloni sprites') # Guardando endereço das imagens
+
 def define_animação_virada(endereço, posição, n):
     lista = []
     for i in range(1, n):
@@ -57,7 +56,7 @@ def define_animação_virada(endereço, posição, n):
 
 
 # Animações do Poloni
-poloni_parado = define_animação(Poloni_dir, 'Parado')
+poloni_parado = define_animação(Poloni_dir, 'Parado', 6)
 poloni_andando = define_animação(Poloni_dir, 'Andando', 11)
 poloni_socando = define_animação(Poloni_dir, 'Soco', 4)
 poloni_agachando = define_animação(Poloni_dir, 'Agachando', 3)
@@ -139,7 +138,7 @@ Julien_dir = path.join(path.dirname(__file__), 'imagens', 'Julien sprites')
 julien_parado = define_animação_virada(Julien_dir, 'Parado', 6)
 julien_andando = define_animação_virada(Julien_dir, 'Andando', 12)
 julien_socando = define_animação_virada(Julien_dir, 'Atacando', 14)
-julien_agachando = define_animação_virada(Julien_dir, 'Agachando', 3)
+julien_agachando = define_animação_virada(Julien_dir, 'Agachando', 2)
 julien_atacado = define_animação_virada(Julien_dir, 'Sendo atacado', 4)
 julien_pulando = define_animação_virada(Julien_dir, 'Pulando', 4)
 julien_morto = define_animação_virada(Julien_dir, "Morto", 4)
@@ -184,21 +183,21 @@ imagens_marcio = {
 #GABRIEL
 gabriel_dir = path.join(path.dirname(__file__), 'imagens', 'Gabriel sprites')
 
-gabriel_parado = define_animação_virada(gabriel_dir, "Parado")
-gabriel_andando = define_animação_virada(gabriel_dir, 'Andando')
-gabriel_socando = define_animação_virada(gabriel_dir, 'Atacando')
-gabriel_agachando = define_animação_virada(gabriel_dir, 'Agachando')
-gabriel_atacado = define_animação_virada(gabriel_dir, 'Sendo atacado')
-gabriel_pulando = define_animação_virada(gabriel_dir, 'Pulando')
-gabriel_morto = define_animação_virada(gabriel_dir, 'Morto')
-gabriel_vencendo = define_animação_virada(gabriel_dir, 'Vencendo')
+gabriel_parado = define_animação_virada(gabriel_dir, "Parado", 8)
+gabriel_andando = define_animação_virada(gabriel_dir, 'Andando', 8)
+gabriel_socando = define_animação_virada(gabriel_dir, 'Socando', 13)
+gabriel_agachando = define_animação_virada(gabriel_dir, 'Agachando', 4)
+gabriel_atacado = define_animação_virada(gabriel_dir, 'Sendo atacado', 5)
+gabriel_pulando = define_animação_virada(gabriel_dir, 'Pulando', 11)
+gabriel_morto = define_animação_virada(gabriel_dir, 'Morto', 12)
+gabriel_vencendo = define_animação_virada(gabriel_dir, 'Vencendo', 7)
 
 imagens_gabriel = {
     'PARADO': gabriel_parado,
     'ANDANDO': gabriel_andando,
     'SOCANDO:': gabriel_socando,
     'AGACHANDO': gabriel_agachando,
-    'ATACADO': gabriel_atacado,
+    'SOCANDO': gabriel_atacado,
     'PULANDO': gabriel_pulando,
     'MORTO': gabriel_morto,
     'VENCENDO': gabriel_vencendo
