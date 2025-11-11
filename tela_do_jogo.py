@@ -42,9 +42,9 @@ class Player1(pygame.sprite.Sprite):
         self.ultimo_ataque = pygame.time.get_ticks()  # Cooldown para o ataque
         self.frame_ticks_ataque = 150 * (len(assets['SOCANDO']) + 1)  # Tempo entre ataques (50 ms para cada frame de animação)
         
-        # Cooldown para projéteis
+        # Cooldown para especiais
         self.ultimo_especial = pygame.time.get_ticks()
-        self.cooldown_especial = 500  # Cooldown entre especiais
+        self.cooldown_especial = 5000  # Cooldown entre especiais
 
     def move(self, surface, target):
         SPEED = 10

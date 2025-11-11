@@ -177,14 +177,15 @@ imagens_marcio = {
 gabriel_dir = path.join(path.dirname(__file__), 'imagens', 'Gabriel sprites')
 
 # As imagens do gabriel são menores então precisamos usar o argumento extra da função
-gabriel_parado = define_animação_virada(gabriel_dir, "Parado", 8, 200)
-gabriel_andando = define_animação_virada(gabriel_dir, 'Andando', 8, 200)
-gabriel_socando = define_animação_virada(gabriel_dir, 'Socando', 13, 200)
-gabriel_agachando = define_animação_virada(gabriel_dir, 'Agachando', 4, 200)
-gabriel_atacado = define_animação_virada(gabriel_dir, 'Sendo atacado', 5, 200)
-gabriel_pulando = define_animação_virada(gabriel_dir, 'Pulando', 11, 200)
-gabriel_morto = define_animação_virada(gabriel_dir, 'Morto', 12, 200)
-gabriel_vencendo = define_animação_virada(gabriel_dir, 'Vencendo', 7, 200)
+# Aumentando o tamanho para compensar o redimensionamento posterior no Player
+gabriel_parado = define_animação_virada(gabriel_dir, "Parado", 8)
+gabriel_andando = define_animação_virada(gabriel_dir, 'Andando', 8)
+gabriel_socando = define_animação_virada(gabriel_dir, 'Socando', 13)
+gabriel_agachando = define_animação_virada(gabriel_dir, 'Agachando', 4)
+gabriel_atacado = define_animação_virada(gabriel_dir, 'Sendo atacado', 5)
+gabriel_pulando = define_animação_virada(gabriel_dir, 'Pulando', 11)
+gabriel_morto = define_animação_virada(gabriel_dir, 'Morto', 12)
+gabriel_vencendo = define_animação_virada(gabriel_dir, 'Vencendo', 7)
 # Especial é menor e só uma imagem então precisa ser definido manualmente
 gabriel_especial = pygame.image.load(path.join(path.dirname(__file__), 'imagens', 'Gabriel sprites', 'Especial', '1.png'))
 gabriel_especial = pygame.transform.scale(gabriel_especial, (80, 80))
