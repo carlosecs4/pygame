@@ -1,4 +1,3 @@
-# Importando as bibliotecas necessárias.
 import pygame
 import random
 from os import path
@@ -14,8 +13,10 @@ def tela_selecao(tela):
     personagens = ['poloni', 'bob', 'dani', 'julien', 'marcio']
     font = pygame.font.Font("fontes/mk5style.ttf", 30)
 
-    # Lista com as imagens dos personagens, feita com ajuda do copilot
-    imagens_personagens = [pygame.image.load(path.join(IMAGENS_DIR, f'{p} sprites\Foto para seleção\{p} perfil.jpg')) for p in personagens]
+    # Lista com as imagens dos personagens
+    imagens_personagens = []
+    for personagem in personagens:
+        imagens_personagens.append(pygame.image.load(path.join(IMAGENS_DIR, f'{personagem} sprites\Foto para seleção\{personagem} perfil.jpg')))
 
      # Carrega e toca música de fundo (COLOCA ISSO NO ASSETS DEPOIS)
     pygame.mixer.music.load(path.join(MUSICAS_DIR, 'Tela de seleção.ogg'))
@@ -23,6 +24,7 @@ def tela_selecao(tela):
     pygame.mixer.music.play(loops=-1)
 
     # Loop de seleção para o player 1
+    # Algumas parte feitas com ajuda do CoPilot (linhas indicadas por *)
     selecionando = True
     while selecionando:
         clock.tick(FPS)
@@ -48,17 +50,24 @@ def tela_selecao(tela):
         tela.fill(PRETO)
         
         personagem_atual = imagens_personagens[selecionado]
+        # Redimensionando a foto
+        personagem_atual = pygame.transform.scale(personagem_atual, (personagem_atual.get_width() * 400 / personagem_atual.get_height(), 400))
+
+        # Centralizando os textos e imagens (*)
         tela.blit(personagem_atual, (LARGURA // 2 - personagem_atual.get_width() // 2, ALTURA // 2 - personagem_atual.get_height() // 2))
 
         texto = font.render("Player 1 selecione seu personagem", True, VERMELHO)
-        tela.blit(texto, (LARGURA // 2 - texto.get_width() // 2, 50))
+        # (*)
+        tela.blit(texto, (LARGURA // 2 - texto.get_width() // 2, 0))
         
         instrucoes = font.render("Use as setas para selecionar e Enter para confirmar", True, VERMELHO)
-        tela.blit(instrucoes, (LARGURA // 2 - instrucoes.get_width() // 2, ALTURA - 100))
+        # (*)
+        tela.blit(instrucoes, (LARGURA // 2 - instrucoes.get_width() // 2, ALTURA - instrucoes.get_height()))
         
-        pygame.display.flip()
+        pygame.display.update()
     
-    # Loop de seleção para o player 2
+    # Loop de seleção para o player 2 (Mesma coisa que o Loop 1, mas com um avio
+    # para os players não escolherem os mesmos personagens)
     selecionado = 0
     selecionando = True
     while selecionando:
@@ -75,25 +84,32 @@ def tela_selecao(tela):
                     personagem2 = personagens[selecionado]
                     if personagem2 == personagem1:
                         # Evitar que o player 2 escolha o mesmo personagem do player 1
-                        aviso = font.render("Personagem já selecionado! Escolha outro.", True, VERMELHO)
-                        tela.blit(aviso, (LARGURA // 2 - aviso.get_width() // 2, ALTURA - 150))
-                        pygame.display.flip()
-                        pygame.time.delay(1500) # Espera o player ler o aviso
+                        aviso = font.render("Personagem já selecionado! Escolha outro!", True, VERMELHO)
+                        tela.blit(aviso, (LARGURA // 2 - aviso.get_width() // 2, ALTURA // 2 - aviso.get_height() // 2)) # Centro da tela
+                        pygame.display.update()
+                        pygame.time.delay(1000) # Da tempo pro player ler o aviso
                         continue
                     selecionando = False
-                    estado = GAME  # Prosseguir para o jogo após seleção
+                    estado = GAME  # Redireciona para a tela do jogo 
         
         tela.fill(PRETO)
         
         personagem_atual = imagens_personagens[selecionado]
+        # Redimensionando a foto
+        personagem_atual = pygame.transform.scale(personagem_atual, (personagem_atual.get_width() * 400 / personagem_atual.get_height(), 400))
+
+        # Centralizando os textos e imagens (*)
         tela.blit(personagem_atual, (LARGURA // 2 - personagem_atual.get_width() // 2, ALTURA // 2 - personagem_atual.get_height() // 2))
-        
+
         texto = font.render("Player 2 selecione seu personagem", True, VERMELHO)
-        tela.blit(texto, (LARGURA // 2 - texto.get_width() // 2, 50))
+        # (*)
+        tela.blit(texto, (LARGURA // 2 - texto.get_width() // 2, 0))
         
         instrucoes = font.render("Use as setas para selecionar e Enter para confirmar", True, VERMELHO)
-        tela.blit(instrucoes, (LARGURA // 2 - instrucoes.get_width() // 2, ALTURA - 100))
+        # (*)
+        tela.blit(instrucoes, (LARGURA // 2 - instrucoes.get_width() // 2, ALTURA - instrucoes.get_height()))
         
-        pygame.display.flip()
+        pygame.display.update()
+        pygame.display.update()
     pygame.mixer.music.stop()
     return [estado, personagem1, personagem2]

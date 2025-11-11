@@ -69,7 +69,7 @@ class Player1(pygame.sprite.Sprite):
 
             #pular
             if key[pygame.K_w] and not self.jump:
-                self.vel_y = -100
+                self.vel_y = -150
                 self.jump = True 
                 
             # Agachar
@@ -289,7 +289,7 @@ class Player2(pygame.sprite.Sprite):
 
             #pular
             if key[pygame.K_UP] and not self.jump:
-                self.vel_y = -100
+                self.vel_y = -150
                 self.jump = True 
                 
             # Agachar
@@ -469,14 +469,14 @@ def game_screen(screen, p1, p2):
         pass
 
     player1 = Player1(200, 400, imagens_personagens[p1])
-    player2 = Player2(700, 310, imagens_personagens[p2])
+    player2 = Player2(700, 400, imagens_personagens[p2])
 
     state = GAME
 
     # Variáveis para controlar a animação de vencer e morrer
     fim_jogo = False
     fim_jogo_tempo = 0
-    fim_jogo_tempo_max = 3000
+    fim_jogo_tempo_max = 8000
 
     while state == GAME:
         clock.tick(FPS)

@@ -12,7 +12,7 @@ def game_over(tela, ganhador, estado):
     #aqui, usei IA para saber qual fonte seria melhor usar, como poderia ajudar usar a fonte de uma melhor forma, e também para corrigir os bugs.
     clock = pygame.time.Clock()
 
-    tela.fill(BLACK)
+    tela.fill(PRETO)
     
     #cria um texto que diz qual é o ganhador.
     texto = font_ganhador.render(f'PLAYER {ganhador} WINS', True, VERDE)
