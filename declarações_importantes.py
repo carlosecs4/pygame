@@ -1,4 +1,5 @@
 from os import path
+import os
 import pygame
 
 # Estabelece a pasta que contem as figuras e sons.
@@ -8,13 +9,26 @@ MUSICAS_DIR = path.join(path.dirname(__file__), 'musicas')
 
 # Imagens usadas
 fundo_jogo = pygame.image.load(path.join(IMAGENS_DIR, "Cenário 1.jpg"))
+posições = ['parado', 'andando', 'socando', 'agachando', 'atacado','vencendo', 'morto', 'pulando']
+nomes = ['poloni', 'bob', 'dani', 'julien', 'marcio', 'gabriel']
 
 # POLONI
 
 Poloni_dir = path.join(path.dirname(__file__), 'imagens', 'Poloni sprites') # Guardando endereço das imagens
 
-def define_animação(endereço, posição, n):
+# def define_animação(nome, endereço, posição):
+#     lista = []
+#     n = len(os.listdir(f'{nome}\{posição}'))
+#     for i in range(1, n):
+#         temp_img = pygame.image.load(path.join(endereço, f'{posição}\{i}.png'))
+#         temp_img = pygame.transform.scale(temp_img, (temp_img.get_width() * 160 / temp_img.get_height(), 160))
+#         lista.append(temp_img)
+#     return lista
+
+
+def define_animação(nome, endereço, posição):
     lista = []
+    n = len(os.listdir(f'{nome}\{posição}'))
     for i in range(1, n):
         temp_img = pygame.image.load(path.join(endereço, f'{posição}\{i}.png'))
         temp_img = pygame.transform.scale(temp_img, (temp_img.get_width() * 160 / temp_img.get_height(), 160))
@@ -22,6 +36,16 @@ def define_animação(endereço, posição, n):
     return lista
 
 # Alguns arquivos estão invertidos, essa função é igual a anterior, mas também inverte a imagem
+# def define_animação_virada(nome, endereço, posição):
+#     lista = []
+#     n = len(os.listdir(f'{nome}\{posição}'))
+#     for i in range(1, n):
+#         temp_img = pygame.image.load(path.join(endereço, f'{posição}\{i}.png'))
+#         temp_img = pygame.transform.scale(temp_img, (temp_img.get_width() * 160 / temp_img.get_height(), 160))
+#         temp_img = pygame.transform.flip(temp_img, True, False)
+#         lista.append(temp_img)
+#     return lista
+
 def define_animação_virada(endereço, posição, n):
     lista = []
     for i in range(1, n):
@@ -31,8 +55,9 @@ def define_animação_virada(endereço, posição, n):
         lista.append(temp_img)
     return lista
 
+
 # Animações do Poloni
-poloni_parado = define_animação(Poloni_dir, 'Parado', 6)
+poloni_parado = define_animação(Poloni_dir, 'Parado')
 poloni_andando = define_animação(Poloni_dir, 'Andando', 11)
 poloni_socando = define_animação(Poloni_dir, 'Soco', 4)
 poloni_agachando = define_animação(Poloni_dir, 'Agachando', 3)
@@ -52,6 +77,12 @@ imagens_poloni = {
     'PULANDO': poloni_pulando
 }
 
+#adicionando um loop para o código ser menor:
+#aqui, usei IA para saber como faria para acessar a quantidade de imagens na pasta
+# imagens_poloni = {}
+# for i in range(len(posições)):
+#     imagens_poloni[posições[i].upper()] = define_animação('poloni', Poloni_dir, posições[i])
+
 # BOB
 
 Bob_dir = path.join(path.dirname(__file__), 'imagens', 'Bob sprites')
@@ -62,13 +93,19 @@ bob_andando = define_animação_virada(Bob_dir, 'Andando', 11)
 bob_socando = define_animação_virada(Bob_dir, 'Atacando', 6)
 bob_agachando = define_animação_virada(Bob_dir, 'Agachando', 2)
 bob_atacado = define_animação_virada(Bob_dir, 'Sendo atacado', 7)
+bob_morto = define_animação_virada(Bob_dir, 'Morto', 5)
+bob_vencendo = define_animação_virada(Bob_dir, 'Vencendo', 8)
+bob_pulando = define_animação_virada(Bob_dir, "Pulando", 2)
 
 imagens_bob = {
     'PARADO': bob_parado,
     'ANDANDO': bob_andando,
     'SOCANDO': bob_socando,
     'AGACHANDO': bob_agachando,
-    'ATACADO': bob_atacado
+    'ATACADO': bob_atacado,
+    'VENCENDO': bob_vencendo,
+    'MORTO': bob_morto,
+    'PULANDO': bob_pulando
     }
 
 # DANI
@@ -105,6 +142,8 @@ julien_socando = define_animação_virada(Julien_dir, 'Atacando', 14)
 julien_agachando = define_animação_virada(Julien_dir, 'Agachando', 3)
 julien_atacado = define_animação_virada(Julien_dir, 'Sendo atacado', 4)
 julien_pulando = define_animação_virada(Julien_dir, 'Pulando', 4)
+julien_morto = define_animação_virada(Julien_dir, "Morto", 4)
+julien_vencendo = define_animação_virada(Julien_dir, "Vencendo", 8)
 
 imagens_julien = {
     'PARADO': julien_parado,
@@ -112,7 +151,9 @@ imagens_julien = {
     'SOCANDO': julien_socando,
     'AGACHANDO': julien_agachando,
     'ATACADO': julien_atacado,
-    'PULANDO': julien_pulando
+    'PULANDO': julien_pulando,
+    'MORTO': julien_morto,
+    'VENCENDO': julien_vencendo
     }
 
 # MÁRCIO
@@ -140,13 +181,37 @@ imagens_marcio = {
     'VENCENDO': marcio_vencendo
     }
 
+#GABRIEL
+gabriel_dir = path.join(path.dirname(__file__), 'imagens', 'Gabriel sprites')
+
+gabriel_parado = define_animação_virada(gabriel_dir, "Parado")
+gabriel_andando = define_animação_virada(gabriel_dir, 'Andando')
+gabriel_socando = define_animação_virada(gabriel_dir, 'Atacando')
+gabriel_agachando = define_animação_virada(gabriel_dir, 'Agachando')
+gabriel_atacado = define_animação_virada(gabriel_dir, 'Sendo atacado')
+gabriel_pulando = define_animação_virada(gabriel_dir, 'Pulando')
+gabriel_morto = define_animação_virada(gabriel_dir, 'Morto')
+gabriel_vencendo = define_animação_virada(gabriel_dir, 'Vencendo')
+
+imagens_gabriel = {
+    'PARADO': gabriel_parado,
+    'ANDANDO': gabriel_andando,
+    'SOCANDO:': gabriel_socando,
+    'AGACHANDO': gabriel_agachando,
+    'ATACADO': gabriel_atacado,
+    'PULANDO': gabriel_pulando,
+    'MORTO': gabriel_morto,
+    'VENCENDO': gabriel_vencendo
+}
+
 #  Criando um dicionario que mapeia o nome do personagem ao seu dicionário de imagens
 imagens_personagens = {
     'poloni': imagens_poloni,
     'bob': imagens_bob,
     'dani': imagens_dani,
     'julien': imagens_julien,
-    'marcio': imagens_marcio
+    'marcio': imagens_marcio,
+    'gabriel': imagens_gabriel
 }
 
 # Dados gerais do jogo.
