@@ -40,7 +40,7 @@ class Player1(pygame.sprite.Sprite):
         
         # Só será possível atacar a cada 200 milissegundos
         self.ultimo_ataque = pygame.time.get_ticks()  # Cooldown para o ataque
-        self.frame_ticks_ataque = 150 * (len(assets['SOCANDO']) + 1)  # Tempo entre ataques (50 ms para cada frame de animação)
+        self.frame_ticks_ataque = 150 * (len(assets['ATACANDO']) + 1)  # Tempo entre ataques (50 ms para cada frame de animação)
         
         # Cooldown para especiais
         self.ultimo_especial = pygame.time.get_ticks()
@@ -88,7 +88,7 @@ class Player1(pygame.sprite.Sprite):
                 if ataque_executado:
                     # Inicia a animação de ataque do primeiro frame
                     self.attacking = True
-                    self.movimento_atual = 'SOCANDO'
+                    self.movimento_atual = 'ATACANDO'
                     self.frame = 0
                     self.ultimo_update = pygame.time.get_ticks()
             # Defesa
@@ -125,16 +125,18 @@ class Player1(pygame.sprite.Sprite):
     
         if elapsed_ticks_ataque >= self.frame_ticks_ataque:
             self.ultimo_ataque = agora_ataque
+            # Calcula a posição Y do peito (3/4 da altura do personagem)
+            peito_y = self.rect.y + (self.rect.height * 3 // 4) - 16  # -16 para centralizar a caixa de 32px
             # Se o jogador estiver virado para o oponente ele ataca pra direita, se não para a esquerda
             if self.virar == False:
-                attacking_rect = pygame.Rect(self.rect.centerx, self.rect.y, 2 * self.rect.width, self.rect.height)
+                attacking_rect = pygame.Rect(self.rect.centerx, peito_y, 2 * self.rect.width, 32)
             else:
-                attacking_rect = pygame.Rect(self.rect.centerx - 2 * self.rect.width, self.rect.y, 2 * self.rect.width, self.rect.height)
-            hits = attacking_rect.colliderect(target)
+                attacking_rect = pygame.Rect(self.rect.centerx - 2 * self.rect.width, peito_y, 2 * self.rect.width, 32)
+            hits = attacking_rect.colliderect(target.rect)
             self.attacking = True
             if hits:
                 if target.defender == False:
-                    target.health -= (3 * len(self.animacoes['SOCANDO'])) // 2 # Dano é propocional ao tamano da animação
+                    target.health -= (3 * len(self.animacoes['ATACANDO'])) // 2 # Dano é propocional ao tamano da animação
 
                     # Se o usuário estiver sem vida, indicar isso
                     if target.health <= 0:
@@ -178,12 +180,13 @@ class Player1(pygame.sprite.Sprite):
     def update(self):
         # Ataque precisa ser um caso especial, mesmo se não estiver 
         # atacando a animação precisa ir até o final
-        if self.movimento_atual == 'SOCANDO':
+        if self.movimento_atual == 'ATACANDO':
             agora = pygame.time.get_ticks()
             tempo = agora - self.ultimo_update
 
             # Atualiza a imagem atual do frame
             self.imagem = self.animacoes[self.movimento_atual][self.frame]
+            self.imagem = pygame.transform.scale(self.imagem, (self.rect.width, self.rect.height))
 
             if tempo > self.frame_ticks_animacao:
                 self.ultimo_update = agora
@@ -200,8 +203,8 @@ class Player1(pygame.sprite.Sprite):
         # Checa o estado atual para definir a animação correta
         if self.attacking:
             # Se o movimento novo não for o mesmo que o anterior, reinicia a animação
-            if self.movimento_atual != 'SOCANDO':
-                self.movimento_atual = 'SOCANDO'
+            if self.movimento_atual != 'ATACANDO':
+                self.movimento_atual = 'ATACANDO'
                 self.frame = 0
                 self.ultimo_update = pygame.time.get_ticks()
         elif self.correndo:
@@ -247,6 +250,7 @@ class Player1(pygame.sprite.Sprite):
             self.frame = 0
         
         self.imagem = self.animacoes[self.movimento_atual][self.frame]
+        self.imagem = pygame.transform.scale(self.imagem, (self.rect.width, self.rect.height))
         if tempo > self.frame_ticks_animacao:
             self.ultimo_update = agora
             self.frame += 1
@@ -288,7 +292,7 @@ class Player2(pygame.sprite.Sprite):
         
         # Só será possível atacar a cada 200 milissegundos
         self.ultimo_ataque = pygame.time.get_ticks()  # Cooldown para o ataque
-        self.frame_ticks_ataque = 150 * (len(assets['SOCANDO']) + 1)  # Tempo entre ataques (50 ms para cada frame de animação)
+        self.frame_ticks_ataque = 150 * (len(assets['ATACANDO']) + 1)  # Tempo entre ataques (50 ms para cada frame de animação)
         
         # Cooldown para projéteis
         self.ultimo_especial = pygame.time.get_ticks()
@@ -336,7 +340,7 @@ class Player2(pygame.sprite.Sprite):
                 if ataque_executado:
                     # Inicia a animação de ataque do primeiro frame
                     self.attacking = True
-                    self.movimento_atual = 'SOCANDO'
+                    self.movimento_atual = 'ATACANDO'
                     self.frame = 0
                     self.ultimo_update = pygame.time.get_ticks()
             # Defesa
@@ -373,16 +377,18 @@ class Player2(pygame.sprite.Sprite):
     
         if elapsed_ticks_ataque >= self.frame_ticks_ataque:
             self.ultimo_ataque = agora_ataque
+            # Calcula a posição Y do peito (3/4 da altura do personagem)
+            peito_y = self.rect.y + (self.rect.height * 3 // 4) - 16  # -16 para centralizar a caixa de 32px
             # Se o jogador estiver virado para o oponente ele ataca pra direita, se não para a esquerda
             if self.virar == False:
-                attacking_rect = pygame.Rect(self.rect.centerx, self.rect.y, 2 * self.rect.width, self.rect.height)
+                attacking_rect = pygame.Rect(self.rect.centerx, peito_y, 2 * self.rect.width, 32)
             else:
-                attacking_rect = pygame.Rect(self.rect.centerx - 2 * self.rect.width, self.rect.y, 2 * self.rect.width, self.rect.height)
-            hits = attacking_rect.colliderect(target)
+                attacking_rect = pygame.Rect(self.rect.centerx - 2 * self.rect.width, peito_y, 2 * self.rect.width, 32)
+            hits = attacking_rect.colliderect(target.rect)
             self.attacking = True
             if hits:
                 if target.defender == False:
-                    target.health -= (3 * len(self.animacoes['SOCANDO'])) // 2 # Dano é propocional ao tamano da animação
+                    target.health -= (3 * len(self.animacoes['ATACANDO'])) // 2 # Dano é propocional ao tamano da animação
 
                     # Se o usuário estiver sem vida, indicar isso
                     if target.health <= 0:
@@ -426,12 +432,13 @@ class Player2(pygame.sprite.Sprite):
     def update(self):
         # Ataque precisa ser um caso especial, mesmo se não estiver 
         # atacando a animação precisa ir até o final
-        if self.movimento_atual == 'SOCANDO':
+        if self.movimento_atual == 'ATACANDO':
             agora = pygame.time.get_ticks()
             tempo = agora - self.ultimo_update
 
             # Atualiza a imagem atual do frame
             self.imagem = self.animacoes[self.movimento_atual][self.frame]
+            self.imagem = pygame.transform.scale(self.imagem, (self.rect.width, self.rect.height))
 
             if tempo > self.frame_ticks_animacao:
                 self.ultimo_update = agora
@@ -448,8 +455,8 @@ class Player2(pygame.sprite.Sprite):
         # Checa o estado atual para definir a animação correta
         if self.attacking:
             # Se o movimento novo não for o mesmo que o anterior, reinicia a animação
-            if self.movimento_atual != 'SOCANDO':
-                self.movimento_atual = 'SOCANDO'
+            if self.movimento_atual != 'ATACANDO':
+                self.movimento_atual = 'ATACANDO'
                 self.frame = 0
                 self.ultimo_update = pygame.time.get_ticks()
         elif self.correndo:
@@ -495,6 +502,7 @@ class Player2(pygame.sprite.Sprite):
             self.frame = 0
         
         self.imagem = self.animacoes[self.movimento_atual][self.frame]
+        self.imagem = pygame.transform.scale(self.imagem, (self.rect.width, self.rect.height))
         if tempo > self.frame_ticks_animacao:
             self.ultimo_update = agora
             self.frame += 1

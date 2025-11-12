@@ -44,7 +44,7 @@ def tela_selecao(tela):
                 elif event.key == pygame.K_RETURN:
                     selecionando = False
                     estado = GAME  # Prosseguir para o jogo após seleção
-                    personagem1 = nomes[selecionado]
+                    personagem1 = nomes[selecionado].lower()
         
         tela.fill(PRETO)
         
@@ -80,7 +80,7 @@ def tela_selecao(tela):
                 elif event.key == pygame.K_RIGHT:
                     selecionado = (selecionado + 1) % len(imagens_personagens)
                 elif event.key == pygame.K_RETURN:
-                    personagem2 = nomes[selecionado]
+                    personagem2 = nomes[selecionado].lower()
                     if personagem2 == personagem1:
                         # Evitar que o player 2 escolha o mesmo personagem do player 1
                         aviso = font.render("Personagem já selecionado! Escolha outro!", True, VERMELHO)

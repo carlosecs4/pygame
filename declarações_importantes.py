@@ -9,208 +9,32 @@ MUSICAS_DIR = path.join(path.dirname(__file__), 'musicas')
 
 # Imagens usadas
 fundo_jogo = pygame.image.load(path.join(IMAGENS_DIR, "Cenário 1.jpg"))
-posições = ['parado', 'andando', 'socando', 'agachando', 'atacado','vencendo', 'morto', 'pulando']
-nomes = ['poloni', 'bob', 'dani', 'julien', 'marcio', 'gabriel']
+posições = ['Parado', 'Andando', 'Atacando', 'Agachando', 'Sendo atacado','Vencendo', 'Morto', 'Pulando', 'Defendendo', "Especial"]
+nomes = ['Poloni', 'Bob', 'Dani', 'Julien', 'Marcio', 'Gabriel']
 
-def define_animação(endereço, posição, n, tamanho=160):
+def define_animação(nome, posição, tamanho=160):
     lista = []
+    endereço = path.join(path.dirname(__file__), 'imagens', f'{nome} sprites', posição)
+    n = len(os.listdir(endereço))
     for i in range(1, n):
-        temp_img = pygame.image.load(path.join(endereço, f'{posição}\{i}.png'))
+        temp_img = pygame.image.load(path.join(endereço, f'{i}.png'))
         temp_img = pygame.transform.scale(temp_img, (temp_img.get_width() * tamanho / temp_img.get_height(), tamanho))
-        lista.append(temp_img)
-    return lista
-
-def define_animação_virada(endereço, posição, n, tamanho=160):
-    lista = []
-    for i in range(1, n):
-        temp_img = pygame.image.load(path.join(endereço, f'{posição}\{i}.png'))
-        temp_img = pygame.transform.scale(temp_img, (temp_img.get_width() * tamanho / temp_img.get_height(), tamanho))
-        temp_img = pygame.transform.flip(temp_img, True, False)
+        if nome != 'Poloni':
+            temp_img = pygame.transform.flip(temp_img, True, False)
         lista.append(temp_img)
     return lista
 
 # POLONI
-
-Poloni_dir = path.join(path.dirname(__file__), 'imagens', 'Poloni sprites') # Guardando endereço das imagens
-
-# Animações do Poloni
-poloni_parado = define_animação(Poloni_dir, 'Parado', 6)
-poloni_andando = define_animação(Poloni_dir, 'Andando', 11)
-poloni_socando = define_animação(Poloni_dir, 'Soco', 4)
-poloni_agachando = define_animação(Poloni_dir, 'Agachando', 3)
-poloni_atacado = define_animação(Poloni_dir, 'Sendo atacado', 5)
-poloni_vencendo = define_animação(Poloni_dir, 'Vencendo', 4)
-poloni_morto = define_animação(Poloni_dir, 'Morto', 9)
-poloni_pulando = define_animação(Poloni_dir, 'Pulando', 7)
-# Especial é menor e só uma imagem então precisa ser definido manualmente
-poloni_especial = pygame.image.load(path.join(path.dirname(__file__), 'imagens', 'Poloni sprites', 'Especial', '1.png'))
-poloni_especial = pygame.transform.scale(poloni_especial, (80, 80))
-
-imagens_poloni = {
-    'PARADO': poloni_parado,
-    'ANDANDO': poloni_andando,
-    'SOCANDO': poloni_socando,
-    'AGACHANDO': poloni_agachando,
-    'ATACADO': poloni_atacado,
-    'VENCENDO': poloni_vencendo,
-    'MORTO': poloni_morto,
-    'PULANDO': poloni_pulando,
-    'ESPECIAL': poloni_especial
-}
-
-# BOB
-
-Bob_dir = path.join(path.dirname(__file__), 'imagens', 'Bob sprites')
-
-# Animações do Bob
-bob_parado = define_animação_virada(Bob_dir, 'Parado', 4)
-bob_andando = define_animação_virada(Bob_dir, 'Andando', 11)
-bob_socando = define_animação_virada(Bob_dir, 'Atacando', 6)
-bob_agachando = define_animação_virada(Bob_dir, 'Agachando', 2)
-bob_atacado = define_animação_virada(Bob_dir, 'Sendo atacado', 7)
-bob_morto = define_animação_virada(Bob_dir, 'Morto', 5)
-bob_vencendo = define_animação_virada(Bob_dir, 'Vencendo', 8)
-bob_pulando = define_animação_virada(Bob_dir, "Pulando", 2)
-# Especial é menor e só uma imagem então precisa ser definido manualmente
-bob_especial = pygame.image.load(path.join(path.dirname(__file__), 'imagens', 'Bob sprites', 'Especial', '1.png'))
-bob_especial = pygame.transform.scale(bob_especial, (80, 80))
-
-imagens_bob = {
-    'PARADO': bob_parado,
-    'ANDANDO': bob_andando,
-    'SOCANDO': bob_socando,
-    'AGACHANDO': bob_agachando,
-    'ATACADO': bob_atacado,
-    'VENCENDO': bob_vencendo,
-    'MORTO': bob_morto,
-    'PULANDO': bob_pulando,
-    'ESPECIAL': bob_especial
-    }
-
-# DANI
-Dani_dir = path.join(path.dirname(__file__), 'imagens', 'Dani sprites')
-
-# Animações da Dani
-dani_parado = define_animação_virada(Dani_dir, 'Parado', 11)
-dani_andando = define_animação_virada(Dani_dir, 'Andando', 11)
-dani_socando = define_animação_virada(Dani_dir, 'Atacando', 9)
-dani_agachando = define_animação_virada(Dani_dir, 'Agachando', 3)
-dani_atacado = define_animação_virada(Dani_dir, 'Sendo atacado', 5)
-dani_vencendo = define_animação_virada(Dani_dir, 'Vencendo', 14)
-dani_pulando = define_animação_virada(Dani_dir, 'Pulando', 5)
-dani_morto = define_animação_virada(Dani_dir, 'Morto', 8)
-# Especial é menor e só uma imagem então precisa ser definido manualmente
-dani_especial = pygame.image.load(path.join(path.dirname(__file__), 'imagens', 'Dani sprites', 'Especial', '1.png'))
-dani_especial = pygame.transform.scale(dani_especial, (80, 80))
-
-imagens_dani = {
-    'PARADO': dani_parado,
-    'ANDANDO': dani_andando,
-    'SOCANDO': dani_socando,
-    'AGACHANDO': dani_agachando,
-    'ATACADO': dani_atacado,
-    'VENCENDO': dani_vencendo,
-    'PULANDO': dani_pulando,
-    'MORTO': dani_morto,
-    'ESPECIAL': dani_especial
-    }
-
-# Julien
-Julien_dir = path.join(path.dirname(__file__), 'imagens', 'Julien sprites')
-
-# Animações do Julien
-julien_parado = define_animação_virada(Julien_dir, 'Parado', 6)
-julien_andando = define_animação_virada(Julien_dir, 'Andando', 12)
-julien_socando = define_animação_virada(Julien_dir, 'Atacando', 14)
-julien_agachando = define_animação_virada(Julien_dir, 'Agachando', 2)
-julien_atacado = define_animação_virada(Julien_dir, 'Sendo atacado', 4)
-julien_pulando = define_animação_virada(Julien_dir, 'Pulando', 4)
-julien_morto = define_animação_virada(Julien_dir, "Morto", 4)
-julien_vencendo = define_animação_virada(Julien_dir, "Vencendo", 8)
-# Especial é menor e só uma imagem então precisa ser definido manualmente
-julien_especial = pygame.image.load(path.join(path.dirname(__file__), 'imagens', 'Julien sprites', 'Especial', '1.png'))
-julien_especial = pygame.transform.scale(julien_especial, (80, 80))
-
-imagens_julien = {
-    'PARADO': julien_parado,
-    'ANDANDO': julien_andando,
-    'SOCANDO': julien_socando,
-    'AGACHANDO': julien_agachando,
-    'ATACADO': julien_atacado,
-    'PULANDO': julien_pulando,
-    'MORTO': julien_morto,
-    'VENCENDO': julien_vencendo,
-    'ESPECIAL': julien_especial
-    }
-
-# MÁRCIO
-
-Marcio_dir = path.join(path.dirname(__file__), 'imagens', 'Marcio sprites')
-
-# Animações do Márcio
-marcio_parado = define_animação_virada(Marcio_dir, 'Parado', 7)
-marcio_andando = define_animação_virada(Marcio_dir, 'Andando', 9)
-marcio_socando = define_animação_virada(Marcio_dir, 'Socando', 14)
-marcio_agachando = define_animação_virada(Marcio_dir, 'Agachando', 3)
-marcio_atacado = define_animação_virada(Marcio_dir, 'Sendo atacado', 5)
-marcio_pulando = define_animação_virada(Marcio_dir, 'Pulando', 6)
-marcio_morto = define_animação_virada(Marcio_dir, 'Morto', 6)
-marcio_vencendo = define_animação_virada(Marcio_dir, 'Vencendo', 12)
-# Especial é menor e só uma imagem então precisa ser definido manualmente
-marcio_especial = pygame.image.load(path.join(path.dirname(__file__), 'imagens', 'Marcio sprites', 'Especial', '1.png'))
-marcio_especial = pygame.transform.scale(marcio_especial, (80, 80))
-
-imagens_marcio = {
-    'PARADO': marcio_parado,
-    'ANDANDO': marcio_andando,
-    'SOCANDO': marcio_socando,
-    'AGACHANDO': marcio_agachando,
-    'ATACADO': marcio_atacado,
-    'PULANDO': marcio_pulando,
-    'MORTO': marcio_morto,
-    'VENCENDO': marcio_vencendo,
-    'ESPECIAL': marcio_especial
-
-    }
-
-#GABRIEL
-gabriel_dir = path.join(path.dirname(__file__), 'imagens', 'Gabriel sprites')
-
-# As imagens do gabriel são menores então precisamos usar o argumento extra da função
-# Aumentando o tamanho para compensar o redimensionamento posterior no Player
-gabriel_parado = define_animação_virada(gabriel_dir, "Parado", 8)
-gabriel_andando = define_animação_virada(gabriel_dir, 'Andando', 8)
-gabriel_socando = define_animação_virada(gabriel_dir, 'Socando', 13)
-gabriel_agachando = define_animação_virada(gabriel_dir, 'Agachando', 4)
-gabriel_atacado = define_animação_virada(gabriel_dir, 'Sendo atacado', 5)
-gabriel_pulando = define_animação_virada(gabriel_dir, 'Pulando', 11)
-gabriel_morto = define_animação_virada(gabriel_dir, 'Morto', 12)
-gabriel_vencendo = define_animação_virada(gabriel_dir, 'Vencendo', 7)
-# Especial é menor e só uma imagem então precisa ser definido manualmente
-gabriel_especial = pygame.image.load(path.join(path.dirname(__file__), 'imagens', 'Gabriel sprites', 'Especial', '1.png'))
-gabriel_especial = pygame.transform.scale(gabriel_especial, (80, 80))
-
-imagens_gabriel = {
-    'PARADO': gabriel_parado,
-    'ANDANDO': gabriel_andando,
-    'SOCANDO:': gabriel_socando,
-    'AGACHANDO': gabriel_agachando,
-    'SOCANDO': gabriel_atacado,
-    'PULANDO': gabriel_pulando,
-    'MORTO': gabriel_morto,
-    'VENCENDO': gabriel_vencendo,
-    'ESPECIAL': gabriel_especial
-}
-
-#  Criando um dicionario que mapeia o nome do personagem ao seu dicionário de imagens
-imagens_personagens = {
-    'poloni': imagens_poloni,
-    'bob': imagens_bob,
-    'dani': imagens_dani,
-    'julien': imagens_julien,
-    'marcio': imagens_marcio,
-    'gabriel': imagens_gabriel
-}
+imagens_personagens = {}
+for i in range(len(nomes)):
+    animação = {}
+    for posição in posições:
+        if posição != 'Especial':
+            animação[posição.upper()] = define_animação(nomes[i], posição)
+        else:
+            especial = pygame.image.load(path.join(path.dirname(__file__), 'imagens', f'{nomes[i]} sprites', 'Especial', '1.png'))
+            animação[posição.upper()] = pygame.transform.scale(especial, (80, 80))
+    imagens_personagens[nomes[i].lower()] = animação
 
 # Dados gerais do jogo.
 TITULO = 'INSPER FIGHT'
