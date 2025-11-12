@@ -61,7 +61,7 @@ class Player1(pygame.sprite.Sprite):
         #teclas precionadas
         key = pygame.key.get_pressed()
 
-        if self.attacking == False:
+        if self.attacking == False and self.agachar == False:
             #movimentos
             if key[pygame.K_a]:
                 dx = -SPEED
@@ -79,7 +79,9 @@ class Player1(pygame.sprite.Sprite):
             # Agachar
             if key[pygame.K_s] and not self.agachar:
                 self.vel_y = 100
-                self.rect = pygame.Rect((self.rect.x, self.rect.y, 80, 180))
+                pé = self.rect.bottom
+                self.rect.height = 100
+                self.rect.bottom = pé
                 self.agachar = True 
 
             # Ataque comum
@@ -231,13 +233,20 @@ class Player1(pygame.sprite.Sprite):
                 self.movimento_atual = 'PULANDO'
                 self.frame = 0
                 self.ultimo_update = pygame.time.get_ticks()
+        elif self.defender:
+            if self.movimento_atual != 'DEFENDENDO':
+                self.movimento_atual = "DEFENDENDO"
+                self.frame = 0
+                self.ultimo_update = pygame.time.get_ticks()
         else:
             # Se o jogador não está se movendo, a animação muda para parado
             if self.movimento_atual != 'PARADO':
                 self.movimento_atual = 'PARADO'
                 self.frame = 0
         if not self.agachar:
-            self.rect = pygame.Rect((self.rect.x, self.rect.y, 80, 180))
+            pé = self.rect.bottom
+            self.rect.height = 180
+            self.rect.bottom = pé
 
         # Controle de frames da animação
         agora = pygame.time.get_ticks()
@@ -312,7 +321,7 @@ class Player2(pygame.sprite.Sprite):
         #teclas precionadas
         key = pygame.key.get_pressed()
 
-        if self.attacking == False:
+        if self.attacking == False and self.agachar == False:
             #movimentos
             if key[pygame.K_LEFT]:
                 dx = -SPEED
@@ -329,9 +338,10 @@ class Player2(pygame.sprite.Sprite):
                 
             # Agachar
             if key[pygame.K_DOWN] and not self.agachar:
-                self.vel_y = 100
-                self.rect = pygame.Rect((self.rect.x, self.rect.y, 80, 180))
-                self.agachar = True 
+                original_bottom = self.rect.bottom 
+                self.rect.height = 100 
+                self.rect.bottom = original_bottom
+                self.agachar = True
 
             # Ataque comum
             if key[pygame.K_RSHIFT]:
@@ -377,12 +387,12 @@ class Player2(pygame.sprite.Sprite):
         if elapsed_ticks_ataque >= self.frame_ticks_ataque:
             self.ultimo_ataque = agora_ataque
             # Calcula a posição Y do peito (3/4 da altura do personagem)
-            peito_y = self.rect.y + (self.rect.height * 3 // 4) - 16  # -16 para centralizar a caixa de 32px
+            peito_y = self.rect.y + (self.rect.height * 3 // 4) 
             # Se o jogador estiver virado para o oponente ele ataca pra direita, se não para a esquerda
             if self.virar == False:
-                attacking_rect = pygame.Rect(self.rect.centerx, peito_y, 2 * self.rect.width, 32)
+                attacking_rect = pygame.Rect(self.rect.centerx, peito_y, self.rect.width, 32)
             else:
-                attacking_rect = pygame.Rect(self.rect.centerx - 2 * self.rect.width, peito_y, 2 * self.rect.width, 32)
+                attacking_rect = pygame.Rect(self.rect.centerx - 2 * self.rect.width, peito_y, self.rect.width, 32)
             hits = attacking_rect.colliderect(target.rect)
             self.attacking = True
             if hits:
@@ -457,14 +467,14 @@ class Player2(pygame.sprite.Sprite):
                 self.movimento_atual = 'ATACANDO'
                 self.frame = 0
                 self.ultimo_update = pygame.time.get_ticks()
-        elif self.correndo:
-            if self.movimento_atual != 'ANDANDO':
-                self.movimento_atual = 'ANDANDO'
-                self.frame = 0
-                self.ultimo_update = pygame.time.get_ticks()
         elif self.agachar:
             if self.movimento_atual != 'AGACHANDO':
                 self.movimento_atual = 'AGACHANDO'
+                self.frame = 0
+                self.ultimo_update = pygame.time.get_ticks()
+        elif self.correndo:
+            if self.movimento_atual != 'ANDANDO':
+                self.movimento_atual = 'ANDANDO'
                 self.frame = 0
                 self.ultimo_update = pygame.time.get_ticks()
         elif self.morto:
@@ -482,13 +492,20 @@ class Player2(pygame.sprite.Sprite):
                 self.movimento_atual = 'PULANDO'
                 self.frame = 0
                 self.ultimo_update = pygame.time.get_ticks()
+        elif self.defender:
+            if self.movimento_atual != 'DEFENDENDO':
+                self.movimento_atual = "DEFENDENDO"
+                self.frame = 0
+                self.ultimo_update = pygame.time.get_ticks()
         else:
             # Se o jogador não está se movendo, a animação muda para parado
             if self.movimento_atual != 'PARADO':
                 self.movimento_atual = 'PARADO'
                 self.frame = 0
         if not self.agachar:
-            self.rect = pygame.Rect((self.rect.x, self.rect.y, 80, 180))
+            pé = self.rect.bottom
+            self.rect.height = 180
+            self.rect.bottom = pé 
 
         # Controle de frames da animação
         agora = pygame.time.get_ticks()
@@ -587,11 +604,11 @@ def game_screen(screen, p1, p2):
             player2.move(tela, player1)
 
         # Sempre desenha e atualiza os players
-        player1.draw(tela)
-        player2.draw(tela)
         player1.update()
         player2.update()
-        
+        player1.draw(tela)
+        player2.draw(tela)
+
         # Atualizar e desenhar projéteis
         especiais.update()
         for especial in especiais:
