@@ -141,7 +141,8 @@ class Player1(pygame.sprite.Sprite):
                 #O julien agora vai dar hitkill
                 if target.defender == False:
                     if self.nome == 'julien':
-                        target.health = 
+                        target.health = 0
+
                     else:
                         target.health -= (3 * len(self.animacoes['ATACANDO'])) // 2 # Dano é propocional ao tamanho da animação
 
@@ -290,7 +291,7 @@ class Player2(pygame.sprite.Sprite):
         self.defender = False
         self.morto = False
         self.vencendo = False
-        self.nome = nome
+        self.nome = nome 
         
         # Variáveis de animação
         self.animacoes = assets
@@ -308,9 +309,9 @@ class Player2(pygame.sprite.Sprite):
         self.ultimo_ataque = pygame.time.get_ticks()  # Cooldown para o ataque
         self.frame_ticks_ataque = 150 * (len(assets['ATACANDO']) + 1)  # Tempo entre ataques (50 ms para cada frame de animação)
         
-        # Cooldown para projéteis
+        # Cooldown para especiais
         self.ultimo_especial = pygame.time.get_ticks()
-        self.cooldown_especial = 500  # Cooldown entre especiais
+        self.cooldown_especial = 5000  # Cooldown entre especiais
 
     def move(self, surface, target):
         SPEED = 10
@@ -344,10 +345,11 @@ class Player2(pygame.sprite.Sprite):
                 
             # Agachar
             if key[pygame.K_DOWN] and not self.agachar:
-                original_bottom = self.rect.bottom 
-                self.rect.height = 100 
-                self.rect.bottom = original_bottom
-                self.agachar = True
+                self.vel_y = 100
+                pé = self.rect.bottom
+                self.rect.height = 100
+                self.rect.bottom = pé
+                self.agachar = True 
 
             # Ataque comum
             if key[pygame.K_RSHIFT]:
@@ -359,7 +361,7 @@ class Player2(pygame.sprite.Sprite):
                     self.frame = 0
                     self.ultimo_update = pygame.time.get_ticks()
             # Defesa
-            elif key[pygame.K_KP1]:
+            elif key[pygame.K_KP0]:
                 self.defender = True
         
         #Garantir que os jogadores estão virados um pro outro
@@ -393,7 +395,7 @@ class Player2(pygame.sprite.Sprite):
         if elapsed_ticks_ataque >= self.frame_ticks_ataque:
             self.ultimo_ataque = agora_ataque
             # Calcula a posição Y do peito (3/4 da altura do personagem)
-            peito_y = self.rect.y + (self.rect.height * 3 // 4) 
+            peito_y = self.rect.top + (self.rect.height) // 4
             # Se o jogador estiver virado para o oponente ele ataca pra direita, se não para a esquerda
             if self.virar == False:
                 attacking_rect = pygame.Rect(self.rect.centerx, peito_y, self.rect.width, 32)
@@ -402,9 +404,11 @@ class Player2(pygame.sprite.Sprite):
             hits = attacking_rect.colliderect(target.rect)
             self.attacking = True
             if hits:
+                #O julien agora vai dar hitkill
                 if target.defender == False:
                     if self.nome == 'julien':
                         target.health = 0
+                        
                     else:
                         target.health -= (3 * len(self.animacoes['ATACANDO'])) // 2 # Dano é propocional ao tamanho da animação
 
@@ -476,14 +480,14 @@ class Player2(pygame.sprite.Sprite):
                 self.movimento_atual = 'ATACANDO'
                 self.frame = 0
                 self.ultimo_update = pygame.time.get_ticks()
-        elif self.agachar:
-            if self.movimento_atual != 'AGACHANDO':
-                self.movimento_atual = 'AGACHANDO'
-                self.frame = 0
-                self.ultimo_update = pygame.time.get_ticks()
         elif self.correndo:
             if self.movimento_atual != 'ANDANDO':
                 self.movimento_atual = 'ANDANDO'
+                self.frame = 0
+                self.ultimo_update = pygame.time.get_ticks()
+        elif self.agachar:
+            if self.movimento_atual != 'AGACHANDO':
+                self.movimento_atual = 'AGACHANDO'
                 self.frame = 0
                 self.ultimo_update = pygame.time.get_ticks()
         elif self.morto:
@@ -514,7 +518,7 @@ class Player2(pygame.sprite.Sprite):
         if not self.agachar:
             pé = self.rect.bottom
             self.rect.height = 160
-            self.rect.bottom = pé 
+            self.rect.bottom = pé
 
         # Controle de frames da animação
         agora = pygame.time.get_ticks()
@@ -680,7 +684,7 @@ def game_screen(screen, p1, p2):
                     player2.move(tela, player1)
                 if event.key == pygame.K_RSHIFT:
                     player2.attack(tela, player1)
-                if event.key == pygame.K_KP0:
+                if event.key == pygame.K_KP1:
                     player2.shoot(especiais, player1, imagens_personagens[p2]['ESPECIAL'])
 
             if event.type == pygame.KEYUP:
