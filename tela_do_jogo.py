@@ -126,12 +126,12 @@ class Player1(pygame.sprite.Sprite):
         if elapsed_ticks_ataque >= self.frame_ticks_ataque:
             self.ultimo_ataque = agora_ataque
             # Calcula a posição Y do peito (3/4 da altura do personagem)
-            peito_y = self.rect.y + (self.rect.height * 3 // 4) - 16  # -16 para centralizar a caixa de 32px
+            peito_y = self.rect.top + (self.rect.height) // 4
             # Se o jogador estiver virado para o oponente ele ataca pra direita, se não para a esquerda
             if self.virar == False:
-                attacking_rect = pygame.Rect(self.rect.centerx, peito_y, 2 * self.rect.width, 32)
+                attacking_rect = pygame.Rect(self.rect.centerx, peito_y, self.rect.width, 32)
             else:
-                attacking_rect = pygame.Rect(self.rect.centerx - 2 * self.rect.width, peito_y, 2 * self.rect.width, 32)
+                attacking_rect = pygame.Rect(self.rect.centerx - 2 * self.rect.width, peito_y, self.rect.width, 32)
             hits = attacking_rect.colliderect(target.rect)
             self.attacking = True
             if hits:
