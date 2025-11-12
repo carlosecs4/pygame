@@ -14,7 +14,7 @@ class Player1(pygame.sprite.Sprite):
         #variaveis que indicam o movimento
         self.x = x
         self.y = y
-        self.rect = pygame.Rect((self.x, self.y, 80, 180))
+        self.rect = pygame.Rect((self.x, self.y, 80, 160))
         self.vel_y = 0
         self.jump = False
         self.attacking = False 
@@ -245,7 +245,7 @@ class Player1(pygame.sprite.Sprite):
                 self.frame = 0
         if not self.agachar:
             pé = self.rect.bottom
-            self.rect.height = 180
+            self.rect.height = 160
             self.rect.bottom = pé
 
         # Controle de frames da animação
@@ -274,7 +274,7 @@ class Player2(pygame.sprite.Sprite):
         #variaveis que indicam o movimento
         self.x = x
         self.y = y
-        self.rect = pygame.Rect((self.x, self.y, 80, 180))
+        self.rect = pygame.Rect((self.x, self.y, 80, 160))
         self.vel_y = 0
         self.jump = False
         self.attacking = False 
@@ -504,7 +504,7 @@ class Player2(pygame.sprite.Sprite):
                 self.frame = 0
         if not self.agachar:
             pé = self.rect.bottom
-            self.rect.height = 180
+            self.rect.height = 160
             self.rect.bottom = pé 
 
         # Controle de frames da animação
@@ -570,6 +570,24 @@ def desenha_barra_de_vida(health,x,y):
     pygame.draw.rect(tela,AMARELO, (x,y,400, 30))
     pygame.draw.rect(tela,VERMELHO, (x, y ,400 * ratio ,30))
 
+def desenha_barra_de_especial(player, tela, x, y, largura_max=200, altura=20):
+    # 1. Calcular o 'ratio' (porcentagem de recarga)
+    agora = pygame.time.get_ticks()
+    elapsed = agora - player.ultimo_especial
+    total_cooldown = player.cooldown_especial
+    
+    ratio = min(1.0, elapsed / total_cooldown)
+
+    cor_barra = AZUL
+    if ratio >= 1.0:
+        cor_barra = VERDE
+        
+    largura_atual = largura_max * ratio
+
+    pygame.draw.rect(tela, PRETO, (x, y, largura_max, altura)) 
+    pygame.draw.rect(tela, cor_barra, (x, y, largura_atual, altura)) 
+    pygame.draw.rect(tela, BRANCO, (x, y, largura_max, altura), 2)
+
 def game_screen(screen, p1, p2):
     clock = pygame.time.Clock()
     desenha_fundo()
@@ -597,6 +615,10 @@ def game_screen(screen, p1, p2):
 
         desenha_barra_de_vida(player1.health, 20, 20)
         desenha_barra_de_vida(player2.health, 580, 20)
+
+        desenha_barra_de_especial(player1, tela, 20, 55, 200, 20) 
+        x_p2 = 580 + 400 - 200 
+        desenha_barra_de_especial(player2, tela, x_p2, 55, 200, 20)
 
         # Só permitir inputs se os dois jogadores estiverem vivos
         if fim_jogo == False:
