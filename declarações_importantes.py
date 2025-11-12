@@ -16,7 +16,7 @@ def define_animação(nome, posição, tamanho=160):
     lista = []
     endereço = path.join(path.dirname(__file__), 'imagens', f'{nome} sprites', posição)
     n = len(os.listdir(endereço))
-    for i in range(1, n):
+    for i in range(1, n + 1):
         temp_img = pygame.image.load(path.join(endereço, f'{i}.png'))
         temp_img = pygame.transform.scale(temp_img, (temp_img.get_width() * tamanho / temp_img.get_height(), tamanho))
         if nome != 'Poloni':

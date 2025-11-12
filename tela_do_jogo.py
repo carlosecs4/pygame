@@ -145,7 +145,6 @@ class Player1(pygame.sprite.Sprite):
                         target.morto = True
                 else:
                     target.health += 0
-            pygame.draw.rect(surface, (0, 255, 0), attacking_rect)
             
             return True # Retorna True se o ataque não tiver em cooldown
         else:
@@ -397,7 +396,6 @@ class Player2(pygame.sprite.Sprite):
                         target.morto = True
                 else:
                     target.health += 0
-            pygame.draw.rect(surface, (0, 255, 0), attacking_rect)
             
             return True # Retorna True se o ataque não tiver em cooldown
         else:

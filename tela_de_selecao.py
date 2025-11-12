@@ -64,9 +64,33 @@ def tela_selecao(tela):
         tela.blit(instrucoes, (LARGURA // 2 - instrucoes.get_width() // 2, ALTURA - instrucoes.get_height()))
         
         pygame.display.update()
+    # ... (final do loop do Player 1)
+        pygame.display.update()
     
-    # Loop de seleção para o player 2 (Mesma coisa que o Loop 1, mas com um avio
-    # para os players não escolherem os mesmos personagens)
+    #inicialmente o código  não dava uma boa ideia se já estavamos ou não escolhendo o player 2, useu IA para me dar uma dica de como fazer isso.
+
+    #Pega a última imagem que o P1 selecionou (a variável 'selecionado' ainda existe)
+    personagem_final_p1 = imagens_personagens[selecionado]
+    personagem_final_p1 = pygame.transform.scale(personagem_final_p1, (personagem_final_p1.get_width() * 400 / personagem_final_p1.get_height(), 400))
+
+    tela.fill(PRETO)
+    
+    # Coloca a imagem do P1
+    tela.blit(personagem_final_p1, (LARGURA // 2 - personagem_final_p1.get_width() // 2, ALTURA // 2 - personagem_final_p1.get_height() // 2))
+
+    # Escreve os avisos de transição
+    # (personagem1 foi definido quando P1 apertou Enter)
+    aviso_p1 = font.render(f"Player 1 escolheu: {personagem1.upper()}", True, VERMELHO)
+    aviso_p2 = font.render("VEZ DO PLAYER 2", True, VERDE) # Usar VERDE dá um bom contraste
+    
+    # Centraliza e desenha os avisos na tela
+    tela.blit(aviso_p1, (LARGURA // 2 - aviso_p1.get_width() // 2, ALTURA - 80)) # Perto do fundo
+    tela.blit(aviso_p2, (LARGURA // 2 - aviso_p2.get_width() // 2, 50)) # Perto do topo
+    
+    pygame.display.update()
+    pygame.time.delay(2000) # Pausa por 2 segundos
+
+
     selecionado = 0
     selecionando = True
     while selecionando:
