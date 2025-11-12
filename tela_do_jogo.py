@@ -8,7 +8,7 @@ from tela_de_selecao import *
 # Classe do Player 1
 class Player1(pygame.sprite.Sprite):
     
-    def __init__(self, x, y, assets):
+    def __init__(self, x, y, assets, nome):
         pygame.sprite.Sprite.__init__(self)
 
         #variaveis que indicam o movimento
@@ -25,6 +25,7 @@ class Player1(pygame.sprite.Sprite):
         self.defender = False
         self.morto = False
         self.vencendo = False
+        self.nome = nome 
         
         # Variáveis de animação
         self.animacoes = assets
@@ -137,8 +138,12 @@ class Player1(pygame.sprite.Sprite):
             hits = attacking_rect.colliderect(target.rect)
             self.attacking = True
             if hits:
+                #O julien agora vai dar hitkill
                 if target.defender == False:
-                    target.health -= (3 * len(self.animacoes['ATACANDO'])) // 2 # Dano é propocional ao tamano da animação
+                    if self.nome == 'julien':
+                        target.health = 
+                    else:
+                        target.health -= (3 * len(self.animacoes['ATACANDO'])) // 2 # Dano é propocional ao tamanho da animação
 
                     # Se o usuário estiver sem vida, indicar isso
                     if target.health <= 0:
@@ -268,7 +273,7 @@ class Player1(pygame.sprite.Sprite):
 # Classe para o player 2 (mesma coisa que o P1, mas com teclas de movimento e ataque diferentes)
 class Player2(pygame.sprite.Sprite):
     
-    def __init__(self, x, y, assets):
+    def __init__(self, x, y, assets, nome):
         pygame.sprite.Sprite.__init__(self)
 
         #variaveis que indicam o movimento
@@ -285,6 +290,7 @@ class Player2(pygame.sprite.Sprite):
         self.defender = False
         self.morto = False
         self.vencendo = False
+        self.nome = nome
         
         # Variáveis de animação
         self.animacoes = assets
@@ -397,7 +403,10 @@ class Player2(pygame.sprite.Sprite):
             self.attacking = True
             if hits:
                 if target.defender == False:
-                    target.health -= (3 * len(self.animacoes['ATACANDO'])) // 2 # Dano é propocional ao tamano da animação
+                    if self.nome == 'julien':
+                        target.health = 0
+                    else:
+                        target.health -= (3 * len(self.animacoes['ATACANDO'])) // 2 # Dano é propocional ao tamanho da animação
 
                     # Se o usuário estiver sem vida, indicar isso
                     if target.health <= 0:
@@ -596,8 +605,8 @@ def game_screen(screen, p1, p2):
     pygame.mixer.music.set_volume(0.3)
     pygame.mixer.music.play(loops=-1)
 
-    player1 = Player1(200, 400, imagens_personagens[p1])
-    player2 = Player2(700, 400, imagens_personagens[p2])
+    player1 = Player1(200, 400, imagens_personagens[p1], p1)
+    player2 = Player2(700, 400, imagens_personagens[p2], p2)
 
     # Grupo de sprites para os projéteis
     especiais = pygame.sprite.Group()
