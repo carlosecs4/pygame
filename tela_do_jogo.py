@@ -627,7 +627,7 @@ def game_screen(screen, p1, p2):
     tela.blit(instrucao_1, (10, 25))
     tela.blit(instrucao_2, (2 * (992/1056 * (ALTURA - 50)) // 2 + 20, 25))
     pygame.display.update()
-    pygame.time.delay(5000)
+    pygame.time.delay(10000)
 
     while state == GAME:
         clock.tick(FPS)
